@@ -42,7 +42,15 @@ export default function MainContent() {
       if (element) observer.observe(element);
     });
 
-    return () => observer.disconnect();
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
 
@@ -57,6 +65,7 @@ export default function MainContent() {
 
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<string>("home");
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>("web-apps");
   const [hoveredAccordionId, setHoveredAccordionId] = useState<string | null>(null);
   const [activeProjectName, setActiveProjectName] = useState<string | null>(null);
@@ -133,12 +142,12 @@ export default function MainContent() {
   ];
 
   return (
-    <main className="flex-1 lg:ml-[500px] xl:ml-[550px] min-h-screen p-4 lg:pt-10 lg:p-16 lg:pr-48 xl:pr-60 space-y-10 lg:space-y-16 relative transition-all">
+    <main className="flex-1 lg:ml-[500px] xl:ml-[550px] min-h-screen px-4 sm:px-8 py-8 lg:pt-10 lg:p-16 lg:pr-48 xl:pr-60 space-y-10 lg:space-y-16 relative transition-all w-full overflow-hidden lg:overflow-visible">
       {/* Fixed Top-Right Header (Date/Time) */}
       <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
-        className="fixed top-12 right-6 lg:right-16 xl:right-24 text-right z-50 pointer-events-none"
+        className="fixed top-12 right-6 lg:right-16 xl:right-24 text-right z-50 pointer-events-none hidden lg:block"
       >
         <p className="text-muted-foreground text-sm font-medium">{new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}</p>
         <p className="text-white/80 font-mono text-xl">{time}</p>
@@ -328,16 +337,16 @@ export default function MainContent() {
                                 {project.description}
                               </p>
 
-                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                                 {project.projects?.map((p, pIdx) => (
                                   <motion.div
                                     key={pIdx}
                                     whileHover={{ y: -5, scale: 1.02 }}
                                     onClick={() => setActiveProjectName(p.name)}
-                                    className="group/card bg-[#1c1d24]/50 border border-[#2b2c30]/50 rounded-2xl overflow-hidden cursor-pointer hover:border-primary/50 shadow-lg hover:shadow-[0_0_30px_rgba(0,222,81,0.1)] flex flex-col"
+                                    className="group/card bg-[#1c1d24]/50 border border-[#2b2c30]/50 rounded-xl md:rounded-2xl overflow-hidden cursor-pointer hover:border-primary/50 shadow-lg hover:shadow-[0_0_30px_rgba(0,222,81,0.1)] flex flex-col"
                                   >
                                     {/* Thumbnail Image */}
-                                    <div className="h-40 bg-[#2b2c30]/40 relative flex items-center justify-center border-b border-[#2b2c30]/50">
+                                    <div className="h-28 md:h-40 bg-[#2b2c30]/40 relative flex items-center justify-center border-b border-[#2b2c30]/50">
                                       <Image 
                                         src={p.thumbnail || "/project-placeholder.png"} 
                                         alt={p.name}
@@ -348,20 +357,20 @@ export default function MainContent() {
                                       <div className="absolute inset-0 bg-gradient-to-t from-[#1c1d24] to-transparent opacity-60"></div>
                                     </div>
                                     
-                                    <div className="p-6 flex flex-col flex-1">
-                                      <div className="flex items-center justify-between mb-3">
-                                        <span className="text-[10px] font-bold uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded-md">{p.role === "Solo Developer" ? "Solo" : "Team"}</span>
+                                    <div className="p-3 md:p-6 flex flex-col flex-1">
+                                      <div className="flex items-center justify-between mb-2 md:mb-3">
+                                        <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-primary bg-primary/10 px-1.5 md:px-2 py-0.5 md:py-1 rounded-sm md:rounded-md">{p.role === "Solo Developer" ? "Solo" : "Team"}</span>
                                       </div>
-                                      <h4 className="text-white font-bold text-lg mb-2 group-hover/card:text-primary transition-colors line-clamp-2">{p.name}</h4>
-                                      <p className="text-[#abb2bf] text-sm leading-relaxed line-clamp-2 mb-4 flex-1">
+                                      <h4 className="text-white font-bold text-sm md:text-lg mb-1 md:mb-2 group-hover/card:text-primary transition-colors line-clamp-1 leading-tight md:leading-normal">{p.name}</h4>
+                                      <p className="text-[#abb2bf] text-[10px] md:text-xs lg:text-sm leading-snug md:leading-relaxed line-clamp-2 h-auto mb-2 md:mb-4 flex-1 overflow-hidden">
                                         {p.desc}
                                       </p>
                                       
-                                      <div className="flex flex-wrap gap-2 mt-auto">
-                                        {p.tech.slice(0, 3).map(t => (
-                                          <span key={t} className="text-[9px] font-medium text-white/50 bg-white/5 border border-white/5 px-2 py-0.5 rounded-sm">{t}</span>
+                                      <div className="flex flex-wrap gap-1 md:gap-2 mt-auto">
+                                        {p.tech.slice(0, 2).map(t => (
+                                          <span key={t} className="text-[8px] md:text-[9px] font-medium text-white/50 bg-white/5 border border-white/5 px-1 md:px-2 py-[1px] md:py-0.5 rounded-sm">{t}</span>
                                         ))}
-                                        {p.tech.length > 3 && <span className="text-[9px] font-medium text-white/30 px-1">+{p.tech.length - 3}</span>}
+                                        {p.tech.length > 2 && <span className="text-[8px] md:text-[9px] font-medium text-white/30 px-1">+{p.tech.length - 2}</span>}
                                       </div>
                                     </div>
                                   </motion.div>
@@ -751,7 +760,7 @@ export default function MainContent() {
       </section>
 
       {/* Fixed Vertical Navigation Bar (Right) */}
-      <div className="fixed right-6 lg:right-16 xl:right-24 top-[150px] flex flex-col items-center gap-8 z-40">
+      <div className="hidden lg:flex fixed right-6 lg:right-16 xl:right-24 top-[150px] flex-col items-center gap-8 z-40">
 
         {/* Middle Group: Sun + Nav Pill */}
         <div className="flex flex-col items-center gap-4">
@@ -808,6 +817,43 @@ export default function MainContent() {
               );
             })}
           </div>
+
+          {/* Desktop Bot Icon (Below Pill Menu) */}
+          <div 
+            className="mt-2 relative flex items-center justify-center w-full"
+            onMouseEnter={() => setHoveredItem('bot')}
+            onMouseLeave={() => setHoveredItem(null)}
+          >
+            {/* Hover Label Pill */}
+            <AnimatePresence>
+              {hoveredItem === 'bot' && (
+                <motion.div
+                  initial={{ opacity: 0, x: 10, scale: 0.8 }}
+                  animate={{ opacity: 1, x: -10, scale: 1 }}
+                  exit={{ opacity: 0, x: 10, scale: 0.8 }}
+                  className="absolute right-full mr-2 pointer-events-none z-50"
+                >
+                  <div className="bg-[#1c1d24]/90 backdrop-blur-md border border-[#2b2c30] px-4 py-1.5 rounded-full text-[10px] font-bold text-white uppercase tracking-widest shadow-xl whitespace-nowrap">
+                    Chat with Me!
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="relative w-12 h-12 cursor-pointer drop-shadow-xl saturate-150"
+            >
+              <Image
+                src="/bot1.png"
+                alt="AI Assistant"
+                fill
+                className="object-contain"
+              />
+            </motion.div>
+          </div>
+
         </div>
       </div>
 
@@ -818,6 +864,48 @@ export default function MainContent() {
           <span>Our clients (2015-25©)</span>
         </div>
       </footer>
+      {/* Mobile Bot Icon */}
+      <motion.div 
+        animate={{ 
+          y: showScrollTop ? -34 : 0 
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className="fixed bottom-6 right-6 z-50 pointer-events-auto lg:hidden"
+      >
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="relative w-16 h-16 cursor-pointer block"
+        >
+          <Image
+            src="/bot1.png"
+            alt="AI Assistant"
+            fill
+            className="object-contain"
+          />
+        </motion.button>
+      </motion.div>
+
+      {/* Floating Scroll to Top Button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            className="fixed bottom-6 right-6 lg:right-16 xl:right-24 z-50 px-2"
+          >
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="w-12 h-12 rounded-full bg-[#1c1d24]/80 backdrop-blur-xl border border-[#2b2c30] flex items-center justify-center text-primary shadow-2xl hover:border-primary/50 transition-all cursor-pointer"
+            >
+              <ArrowUp size={20} />
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
