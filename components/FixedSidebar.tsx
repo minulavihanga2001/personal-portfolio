@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Download, Menu, X, Home, User, Briefcase, LayoutGrid, GraduationCap, Send, Sun, Moon } from "lucide-react";
+import { Download, Menu, X, Home, User, Briefcase, LayoutGrid, GraduationCap, Send, Sun, Moon, Award } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const navItems = [
@@ -10,16 +10,17 @@ const navItems = [
   { id: "about", label: "About", icon: User },
   { id: "education", label: "Education", icon: GraduationCap },
   { id: "projects", label: "Projects", icon: Briefcase },
+  { id: "certificates", label: "Certificates", icon: Award },
   { id: "skills", label: "Skills", icon: LayoutGrid },
   { id: "contact", label: "Contact", icon: Send },
 ];
 
 const socialLinks = [
-  { src: "/facebook.svg", label: "Facebook", href: "directapp" },
-  { src: "/instagram.svg", label: "Instagram", href: "directapp" },
-  { src: "/linkedin.svg", label: "LinkedIn", href: "directapp" },
-  { src: "/github.svg", label: "GitHub", href: "directapp" },
-  { src: "/gmail.svg", label: "Email", href: "directapp" },
+  { src: "/linkedin.svg", label: "LinkedIn", href: "https://www.linkedin.com/in/minula-vihanga-9031b4293" },
+  { src: "/github.svg", label: "GitHub", href: "https://github.com/minulavihanga2001" },
+  { src: "/gmail.svg", label: "Email", href: "mailto:minulavihanga70@gmail.com" },
+  { src: "/instagram.svg", label: "Instagram", href: "https://www.instagram.com/minula_v/" },
+  { src: "/facebook.svg", label: "Facebook", href: "https://www.facebook.com/minula.vihanga.79" },
 ];
 
 const phrases = ["Minula Vihanga", "a Web Developer", "an AI Enthusiast"];
@@ -47,7 +48,7 @@ export default function FixedSidebar() {
       setTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
     };
     updateTime();
-    const interval = setInterval(updateTime, 60000);
+    const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -78,7 +79,7 @@ export default function FixedSidebar() {
   }, [displayText, isDeleting, loopNum, typingSpeed]);
 
   return (
-    <aside className="w-full lg:w-[450px] xl:w-[480px] lg:fixed lg:left-8 lg:top-8 lg:bottom-8 lg:h-[calc(100vh-4rem)] px-4 pt-6 pb-2 lg:p-0 z-50 flex flex-col">
+    <aside className="w-full lg:w-[350px] xl:w-[400px] 2xl:w-[450px] lg:fixed lg:left-6 xl:left-8 2xl:left-10 lg:top-8 lg:bottom-8 lg:h-[calc(100vh-4rem)] px-4 pt-6 pb-2 lg:p-0 z-50 flex flex-col">
       
       {/* Mobile Header (Hidden on Desktop) */}
       <div className="flex lg:hidden justify-between items-center w-full mb-6 relative z-50">
@@ -205,6 +206,8 @@ export default function FixedSidebar() {
                 <motion.a
                   key={i}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.1)" }}
                   className="w-10 h-10 rounded-full bg-[#1c1d24] border border-[#2b2c30] flex items-center justify-center p-2.5 hover:border-primary/50 transition-all"
                   title={social.label}
@@ -229,7 +232,7 @@ export default function FixedSidebar() {
                 Available for Work
               </div>
               <h2 className="text-2xl lg:text-4xl font-bold text-white leading-tight">
-                Hey, I'm <br />
+                {"Hey, I'm"} <br />
                 <span className="text-white/40 block">
                   {displayText}
                   <span className="inline-block w-[2px] h-[0.8em] bg-white ml-1 animate-pulse align-middle" />
@@ -243,22 +246,25 @@ export default function FixedSidebar() {
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-2 lg:gap-3 items-center">
               <motion.button
+                onClick={() => scrollToSection('contact')}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-4 py-2 lg:px-5 lg:py-2.5 bg-primary text-primary-foreground rounded-full text-xs lg:text-sm font-semibold flex items-center gap-2 green-glow"
+                className="px-4 py-2 lg:px-5 lg:py-2.5 bg-primary/10 backdrop-blur-md border border-primary text-primary rounded-full text-xs lg:text-sm font-semibold flex items-center gap-2 shadow-[0_0_10px_rgba(0,222,81,0.2)] hover:bg-primary/20 hover:shadow-[0_0_15px_rgba(0,222,81,0.4)] transition-all"
               >
-                <ArrowUpRight size={14} className="lg:w-4 lg:h-4" />
-                Let's talk
+                <Send size={14} className="lg:w-4 lg:h-4 text-primary" />
+                {"Let's Talk"}
               </motion.button>
 
-              <motion.button
+              <motion.a
+                href="/Minula_CV.pdf"
+                download="Minula_CV.pdf"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-4 py-2 lg:px-5 lg:py-2.5 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-full text-xs lg:text-sm font-medium flex items-center gap-2 hover:bg-white/10 transition-colors"
               >
                 <Download size={14} className="lg:w-4 lg:h-4" />
                 Download CV
-              </motion.button>
+              </motion.a>
             </div>
           </div>
         </div>
