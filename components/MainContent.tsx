@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, ArrowUp, Star, Home, User, Briefcase, Sun, GraduationCap, LayoutGrid, ArrowLeft, Maximize2, X, Award, MapPin } from "lucide-react";
+import { Send, ArrowUp, Star, Home, User, Briefcase, Sun, GraduationCap, LayoutGrid, ArrowLeft, Maximize2, Minimize2, X, Award, MapPin } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
@@ -10,6 +10,7 @@ export default function MainContent() {
   const [isAvatarHovered, setIsAvatarHovered] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isChatMaximized, setIsChatMaximized] = useState(false);
   const [messages, setMessages] = useState<{ role: "user" | "model"; content: string }[]>([
     { role: "model", content: "Hello! I'm Minula's AI assistant. Ask me anything about his projects, skills, or experience!" }
   ]);
@@ -1423,45 +1424,45 @@ export default function MainContent() {
       <AnimatePresence>
         {isChatOpen && (
           <motion.div
+            layout
             initial={{
               opacity: 0,
-              scale: 0.3,
-              y: 100,
-              x: 80,
-              rotate: 15,
-              borderRadius: "100px",
-              filter: "blur(10px)"
+              scale: 0.9,
+              y: 40,
             }}
             animate={{
               opacity: 1,
               scale: 1,
               y: 0,
-              x: 0,
-              rotate: 0,
-              borderRadius: "16px",
-              filter: "blur(0px)"
             }}
             exit={{
               opacity: 0,
-              scale: 0.5,
-              y: 80,
-              x: 60,
-              rotate: -10,
-              borderRadius: "100px",
-              filter: "blur(8px)"
+              scale: 0.92,
+              y: 30,
             }}
             transition={{
               type: "spring",
-              stiffness: 260,
-              damping: 22,
-              mass: 0.8
+              stiffness: 300,
+              damping: 26,
+              mass: 0.85
             }}
-            className="fixed bottom-24 right-6 lg:right-24 xl:right-32 z-50 w-[380px] sm:w-[440px] h-[560px] flex flex-col overflow-hidden border border-[#2b2c30] bg-[#13141c]/90 backdrop-blur-2xl shadow-[0_0_25px_rgba(0,222,81,0.03)]"
+            className={`fixed z-50 flex flex-col overflow-hidden border border-white/20 bg-gradient-to-br from-white/[0.08] via-white/[0.02] to-white/[0.12] backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.3),inset_0_-1px_1px_rgba(0,0,0,0.2)] rounded-[24px] ${
+              isChatMaximized 
+                ? "bottom-6 right-6 w-[92vw] sm:w-[600px] md:w-[750px] lg:w-[900px] h-[82vh]" 
+                : "bottom-24 right-6 lg:right-24 xl:right-32 w-[380px] sm:w-[440px] h-[560px]"
+            }`}
           >
+            {/* Shifting Liquid Blobs inside/behind the Glass for Refraction */}
+            <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden rounded-[24px]">
+              <div className="absolute -top-12 -left-12 w-44 h-44 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute top-1/3 left-1/4 w-36 h-36 bg-emerald-500/15 rounded-full blur-2xl animate-float"></div>
+              <div className="absolute -bottom-12 -right-12 w-44 h-44 bg-blue-500/25 rounded-full blur-3xl animate-pulse [animation-delay:2s]"></div>
+            </div>
+
             {/* Header */}
-            <div className="p-4 bg-[#1c1d24]/60 border-b border-[#2b2c30]/50 flex items-center justify-between">
+            <div className="p-4 bg-white/[0.05] border-b border-white/10 flex items-center justify-between backdrop-blur-md">
               <div className="flex items-center gap-3">
-                <div className="relative w-8 h-8 rounded-full bg-[#2b2c30]/20 flex items-center justify-center border border-[#2b2c30] overflow-hidden">
+                <div className="relative w-8 h-8 rounded-full bg-white/10 flex items-center justify-center border border-white/20 overflow-hidden">
                   <Image
                     src="/bot1.png"
                     alt="AI Avatar"
@@ -1470,23 +1471,32 @@ export default function MainContent() {
                   />
                 </div>
                 <div>
-                  <h4 className="text-white font-bold text-xs tracking-wider uppercase">Minula's AI Assistant</h4>
+                  <h4 className="text-white font-bold text-xs tracking-wider uppercase drop-shadow-sm">Minula's AI Assistant</h4>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_4px_#00de51]"></span>
-                    <span className="text-[#abb2bf] text-[9px] font-medium tracking-wide uppercase">Online & Ready</span>
+                    <span className="text-primary/90 text-[9px] font-bold tracking-wide uppercase drop-shadow-sm">Online & Ready</span>
                   </div>
                 </div>
               </div>
-              <button 
-                onClick={() => setIsChatOpen(false)}
-                className="p-1.5 rounded-lg bg-[#1c1d24]/80 border border-[#2b2c30] text-[#abb2bf] hover:text-white hover:border-white/20 transition-all cursor-pointer"
-              >
-                <X size={14} />
-              </button>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setIsChatMaximized(!isChatMaximized)}
+                  className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 hover:scale-105 transition-all cursor-pointer"
+                  title={isChatMaximized ? "Minimize" : "Maximize"}
+                >
+                  {isChatMaximized ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+                </button>
+                <button 
+                  onClick={() => setIsChatOpen(false)}
+                  className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 hover:scale-105 transition-all cursor-pointer"
+                >
+                  <X size={14} />
+                </button>
+              </div>
             </div>
 
             {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-black/10">
               {messages.map((msg, mIdx) => {
                 const isUser = msg.role === "user";
                 return (
@@ -1495,7 +1505,7 @@ export default function MainContent() {
                     className={`flex items-start gap-2.5 max-w-[85%] ${isUser ? "ml-auto flex-row-reverse" : ""}`}
                   >
                     {!isUser && (
-                      <div className="w-6 h-6 rounded-full bg-[#1c1d24] border border-[#2b2c30] relative overflow-hidden flex-shrink-0 mt-0.5">
+                      <div className="w-6 h-6 rounded-full bg-white/10 border border-white/20 relative overflow-hidden flex-shrink-0 mt-0.5">
                         <Image
                           src="/bot1.png"
                           alt="AI Mini"
@@ -1505,10 +1515,10 @@ export default function MainContent() {
                       </div>
                     )}
                     <div
-                      className={`p-3 text-xs leading-relaxed rounded-2xl ${
+                      className={`p-3 text-xs leading-relaxed rounded-xl backdrop-blur-sm ${
                         isUser
-                          ? "bg-primary/10 border border-primary/20 rounded-tr-sm text-white"
-                          : "bg-[#1c1d24]/40 border border-[#2b2c30]/40 rounded-tl-sm text-[#abb2bf]"
+                          ? "bg-primary/20 border border-primary/30 rounded-tr-sm text-white font-medium shadow-[0_2px_12px_rgba(0,222,81,0.1)]"
+                          : "bg-white/[0.08] border border-white/10 rounded-tl-sm text-slate-200 shadow-sm"
                       }`}
                     >
                       <p className="whitespace-pre-line">{msg.content}</p>
@@ -1519,7 +1529,7 @@ export default function MainContent() {
 
               {isChatLoading && (
                 <div className="flex items-start gap-2.5 max-w-[85%] animate-pulse">
-                  <div className="w-6 h-6 rounded-full bg-[#1c1d24] border border-[#2b2c30] relative overflow-hidden flex-shrink-0 mt-0.5">
+                  <div className="w-6 h-6 rounded-full bg-white/10 border border-white/20 relative overflow-hidden flex-shrink-0 mt-0.5">
                     <Image
                       src="/bot1.png"
                       alt="AI Mini"
@@ -1527,10 +1537,10 @@ export default function MainContent() {
                       className="object-contain p-0.5"
                     />
                   </div>
-                  <div className="p-3 bg-[#1c1d24]/40 border border-[#2b2c30]/40 rounded-2xl rounded-tl-sm flex gap-1 items-center h-8">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#abb2bf] animate-bounce [animation-delay:-0.3s]"></span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#abb2bf] animate-bounce [animation-delay:-0.15s]"></span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#abb2bf] animate-bounce"></span>
+                  <div className="p-3 bg-white/[0.08] border border-white/10 rounded-xl rounded-tl-sm flex gap-1 items-center h-8 backdrop-blur-sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white/40 animate-bounce [animation-delay:-0.3s]"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-white/40 animate-bounce [animation-delay:-0.15s]"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-white/40 animate-bounce"></span>
                   </div>
                 </div>
               )}
@@ -1538,19 +1548,19 @@ export default function MainContent() {
             </div>
 
             {/* Input Box */}
-            <form onSubmit={handleSendMessage} className="p-3 bg-[#1c1d24]/60 border-t border-[#2b2c30]/50 flex gap-2">
+            <form onSubmit={handleSendMessage} className="p-3 bg-white/[0.03] border-t border-white/10 flex gap-2 backdrop-blur-md">
               <input
                 type="text"
                 placeholder="Ask Minula's AI Assistant..."
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 disabled={isChatLoading}
-                className="flex-1 bg-[#13141c]/50 border border-[#2b2c30] rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-primary/50 transition-all disabled:cursor-not-allowed"
+                className="flex-1 bg-black/25 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50 focus:bg-black/35 transition-all disabled:cursor-not-allowed shadow-inner"
               />
               <button 
                 type="submit"
                 disabled={isChatLoading || !chatInput.trim()}
-                className="w-10 h-10 rounded-xl bg-primary hover:bg-primary/90 text-black flex items-center justify-center transition-all disabled:bg-[#2b2c30]/50 disabled:border-[#2b2c30] disabled:text-[#abb2bf] disabled:cursor-not-allowed cursor-pointer"
+                className="w-10 h-10 rounded-xl bg-primary hover:bg-primary/95 hover:scale-[1.02] text-black flex items-center justify-center transition-all disabled:bg-white/5 disabled:border-white/10 disabled:text-white/20 disabled:cursor-not-allowed cursor-pointer shadow-[0_0_15px_rgba(0,222,81,0.15)]"
               >
                 <Send size={14} />
               </button>
