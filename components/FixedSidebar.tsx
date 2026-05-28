@@ -208,8 +208,8 @@ export default function FixedSidebar() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.1)" }}
-                  className="w-10 h-10 rounded-full bg-[#1c1d24] border border-[#2b2c30] flex items-center justify-center p-2.5 hover:border-primary/50 transition-all"
+                  whileHover={{ scale: 1.1 }}
+                  className="w-10 h-10 rounded-full bg-gradient-to-br from-white/[0.08] via-white/[0.02] to-white/[0.1] backdrop-blur-xl border border-white/20 flex items-center justify-center p-2.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),inset_0_-1px_1px_rgba(0,0,0,0.15),0_4px_10px_rgba(0,0,0,0.2)] hover:from-white/[0.15] hover:to-white/[0.05] hover:border-primary/40 hover:shadow-[0_0_12px_rgba(0,222,81,0.2),inset_0_1px_1px_rgba(255,255,255,0.3)] transition-all cursor-pointer"
                   title={social.label}
                 >
                   <div className="relative w-full h-full">

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, ArrowUp, Star, Home, User, Briefcase, Sun, GraduationCap, LayoutGrid, ArrowLeft, Maximize2, Minimize2, X, Award, MapPin } from "lucide-react";
+import { Send, ArrowUp, Star, Home, User, Briefcase, Sun, GraduationCap, LayoutGrid, ArrowLeft, Maximize2, Minimize2, X, Award, MapPin, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
@@ -16,7 +16,65 @@ export default function MainContent() {
   ]);
   const [chatInput, setChatInput] = useState("");
   const [isChatLoading, setIsChatLoading] = useState(false);
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
+
+  // Pre-load and cache voices as soon as browser has them ready
+  // getVoices() returns empty on first call — onvoiceschanged fires when they're loaded
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+
+    const loadVoices = () => {
+      voicesRef.current = window.speechSynthesis.getVoices();
+    };
+
+    loadVoices(); // Try immediately (sometimes they're already loaded)
+    window.speechSynthesis.onvoiceschanged = loadVoices; // Always fires on first load
+
+    return () => {
+      window.speechSynthesis.onvoiceschanged = null;
+    };
+  }, []);
+
+  // Web Speech API — soothing voice helper
+  const speak = (text: string) => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.88;  // slower = more relaxed
+    utterance.pitch = 1.0;  // neutral, natural tone
+    utterance.volume = 0.9;
+
+    // Use cached voices — always consistent, even on first open
+    const voices = voicesRef.current;
+    const preferred =
+      voices.find((v) => v.name.includes("Samantha") && v.lang.startsWith("en")) ||
+      voices.find((v) => v.name.includes("Karen")    && v.lang.startsWith("en")) ||
+      voices.find((v) => v.name.includes("Moira")    && v.lang.startsWith("en")) ||
+      voices.find((v) => v.name.includes("Zira")     && v.lang.startsWith("en")) ||
+      voices.find((v) => v.lang === "en-GB") ||
+      voices.find((v) => v.lang.startsWith("en"));
+
+    if (preferred) utterance.voice = preferred;
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Chat open/close with voice
+  const handleChatToggle = () => {
+    if (!isChatOpen && isVoiceEnabled) {
+      speak("Hello there!, I am Minula's AI Assistant! How can I help you?");
+    } else if (isChatOpen && isVoiceEnabled) {
+      speak("Thanks, See you later!");
+    }
+    setIsChatOpen(!isChatOpen);
+  };
+
+  const handleChatClose = () => {
+    if (isVoiceEnabled) speak("Thanks, See you later!");
+    setIsChatOpen(false);
+  };
 
   // Auto scroll to bottom of chat
   useEffect(() => {
@@ -241,7 +299,7 @@ export default function MainContent() {
           desc: "An automated, multi-agent AI system built to analyze and respond to customer feedback for the SteamNoodles restaurant chain. Powered by LangGraph for multi-agent coordination and the Groq API (Llama 3) for lightning-fast inference, the system routes requests dynamically: a Feedback Response Agent classifies review sentiment and drafts context-aware replies, while a Sentiment Visualization Agent parses natural language date ranges to filter Kaggle's Yelp dataset using Pandas and generate trend charts with Matplotlib and Seaborn.",
           tech: ["Python", "LangGraph", "Groq API", "Llama 3", "Pandas", "Matplotlib", "Seaborn"],
           tools: ["VS Code", "Git", "GitHub", "Kaggle API", "python-dotenv"],
-          github: "https://github.com/minula-vihanga/steamnoodles-feedback-agent", 
+          github: "https://github.com/minula-vihanga/steamnoodles-feedback-agent",
           displayRows: [
             [
               { src: "/streamnoodles/1.png", label: "Feedback Agent" },
@@ -258,7 +316,7 @@ export default function MainContent() {
       images: ["/project3-1.png", "/project3-2.png"],
       tags: ["Arduino", "MQTT", "C++"],
       projects: [
-       {
+        {
           name: "Real-Time Asset Tracking Device with IoT Integration",
           role: "Co-Developer (IoT & Full-Stack)",
           thumbnail: "/iot/thumbnail.png",
@@ -318,7 +376,7 @@ export default function MainContent() {
           className="flex items-center gap-4"
         >
           <div className="relative">
-            <div 
+            <div
               onMouseEnter={() => setIsAvatarHovered(true)}
               onMouseLeave={() => setIsAvatarHovered(false)}
               className="w-15 h-15 rounded-full bg-white/5 border border-[#2b2c30] flex items-center justify-center overflow-hidden cursor-pointer group"
@@ -679,14 +737,14 @@ export default function MainContent() {
                                   {/* Display Images - Row-based layout */}
                                   {(p as any).displayRows ? (
                                     <div className="space-y-6">
-                                      {(p as any).displayRows.map((row: Array<{src: string; label: string}>, rowIdx: number) => {
+                                      {(p as any).displayRows.map((row: Array<{ src: string; label: string }>, rowIdx: number) => {
                                         // Determine sizing & styling based on the row index
                                         const isWebProject = p.name.toLowerCase().includes("showroom") || p.name.toLowerCase().includes("studymate") || p.name.toLowerCase().includes("steamnoodles") || p.name.toLowerCase().includes("tracking");
                                         let aspectClass = isWebProject ? "aspect-[16/10]" : "aspect-[9/19.5]";
-                                        let objectFitClass = isWebProject ? "object-cover" : "object-contain"; 
+                                        let objectFitClass = isWebProject ? "object-cover" : "object-contain";
                                         let containerClass = "relative bg-[#1c1d24] rounded-md border border-[#2b2c30]/50 group/display shadow-lg hover:border-primary/30 cursor-pointer overflow-hidden";
                                         let wrapperClass = isWebProject ? "flex-1 min-w-[250px]" : "flex-1 max-w-[200px]";
-                                        
+
                                         if (!isWebProject) {
                                           if (rowIdx === 2) {
                                             // Web screenshots within a hybrid project (like HealthLink)
@@ -731,7 +789,7 @@ export default function MainContent() {
                                                       className={`${objectFitClass} opacity-80 group-hover/display:opacity-100 transition-opacity duration-500`}
                                                     />
                                                     {/* Expand Icon */}
-                                                    <div 
+                                                    <div
                                                       onClick={(e) => {
                                                         e.stopPropagation();
                                                         setSelectedImage(display.src);
@@ -765,7 +823,7 @@ export default function MainContent() {
                                                       className={`${objectFitClass} opacity-80 group-hover/display:opacity-100 transition-opacity duration-500`}
                                                     />
                                                     {/* Expand Icon */}
-                                                    <div 
+                                                    <div
                                                       onClick={(e) => {
                                                         e.stopPropagation();
                                                         setSelectedImage(display.src);
@@ -890,14 +948,14 @@ export default function MainContent() {
                 {/* Image / Lightbox trigger */}
                 <div className="relative aspect-[1.414/1] bg-[#2b2c30]/20 overflow-hidden cursor-pointer">
                   <Image
-                      src={cert.img}
-                      alt={cert.title}
-                      fill
-                      unoptimized={true}
-                      className="object-cover opacity-80 group-hover/cert:opacity-100 group-hover/cert:scale-102 transition-all duration-500 ease-out"
-                    />
+                    src={cert.img}
+                    alt={cert.title}
+                    fill
+                    unoptimized={true}
+                    className="object-cover opacity-80 group-hover/cert:opacity-100 group-hover/cert:scale-102 transition-all duration-500 ease-out"
+                  />
                   {/* Hover Overlay with Enlarge Icon */}
-                  <div 
+                  <div
                     onClick={() => setSelectedImage(cert.img)}
                     className="absolute top-1.5 right-1.5 p-1 rounded-md bg-black/60 backdrop-blur-md border border-white/10 text-white/70 opacity-0 group-hover/cert:opacity-100 hover:text-white hover:bg-black hover:border-white/30 transition-all duration-300 z-20 cursor-pointer"
                   >
@@ -1236,14 +1294,30 @@ export default function MainContent() {
         {/* Middle Group: Sun + Nav Pill */}
         <div className="flex flex-col items-center gap-4">
           <motion.button
-            whileHover={{ scale: 1.1 }}
-            className="w-12 h-12 rounded-full bg-[#1c1d24]/50 backdrop-blur-xl border border-[#2b2c30] flex items-center justify-center text-primary/80 hover:text-primary transition-all shadow-xl"
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-12 h-12 rounded-full bg-gradient-to-br from-white/[0.08] via-white/[0.02] to-white/[0.1] backdrop-blur-2xl border border-white/20 flex items-center justify-center text-primary shadow-[0_8px_25px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.25)] hover:border-primary/40 hover:shadow-[0_0_15px_rgba(0,222,81,0.15)] transition-all cursor-pointer"
           >
-            <Sun size={20} fill="currentColor" className="opacity-20" />
+            <Sun size={20} fill="currentColor" className="opacity-80" />
+          </motion.button>
+
+          {/* Voice Enable/Disable Button */}
+          <motion.button
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsVoiceEnabled(!isVoiceEnabled)}
+            className={`w-12 h-12 rounded-full backdrop-blur-2xl border flex items-center justify-center shadow-[0_8px_25px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.25)] transition-all cursor-pointer ${
+              isVoiceEnabled
+                ? "bg-gradient-to-br from-primary/20 to-primary/5 border-primary/40 text-primary shadow-[0_0_15px_rgba(0,222,81,0.15)] hover:bg-primary/25"
+                : "bg-gradient-to-br from-white/[0.08] via-white/[0.02] to-white/[0.1] border-white/20 text-white/30 hover:text-white/70 hover:border-white/30"
+            }`}
+            title={isVoiceEnabled ? "Mute voice" : "Enable voice"}
+          >
+            {isVoiceEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
           </motion.button>
 
           {/* Navigation Pill Container */}
-          <div className="bg-[#1c1d24]/50 backdrop-blur-xl border border-[#2b2c30] rounded-full py-6 flex flex-col items-center gap-6 shadow-2xl relative w-12">
+          <div className="bg-gradient-to-b from-white/[0.08] via-white/[0.02] to-white/[0.1] backdrop-blur-2xl border border-white/20 rounded-full py-6 flex flex-col items-center gap-6 shadow-[0_15px_35px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.25),inset_0_-1px_1px_rgba(0,0,0,0.15)] relative w-12">
 
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -1265,7 +1339,7 @@ export default function MainContent() {
                         exit={{ opacity: 0, x: 10, scale: 0.8 }}
                         className="absolute right-full mr-2 pointer-events-none"
                       >
-                        <div className="bg-[#1c1d24]/90 backdrop-blur-md border border-[#2b2c30] px-4 py-1.5 rounded-full text-[10px] font-bold text-white uppercase tracking-widest shadow-xl whitespace-nowrap">
+                        <div className="bg-gradient-to-r from-white/[0.08] to-white/[0.02] backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full text-[10px] font-bold text-white uppercase tracking-widest shadow-[0_4px_15px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.2)] whitespace-nowrap">
                           {item.label}
                         </div>
                       </motion.div>
@@ -1280,7 +1354,7 @@ export default function MainContent() {
                         element.scrollIntoView({ behavior: "smooth" });
                       }
                     }}
-                    className={`${activeSection === item.id ? 'text-primary' : 'text-white/30 hover:text-white'} transition-colors relative`}
+                    className={`relative flex items-center justify-center transition-colors ${activeSection === item.id ? 'text-primary' : 'text-white/30 hover:text-white'}`}
                   >
                     <Icon size={20} />
                   </motion.button>
@@ -1304,7 +1378,7 @@ export default function MainContent() {
                   exit={{ opacity: 0, x: 10, scale: 0.8 }}
                   className="absolute right-full mr-2 pointer-events-none z-50"
                 >
-                  <div className="bg-[#1c1d24]/90 backdrop-blur-md border border-[#2b2c30] px-4 py-1.5 rounded-full text-[10px] font-bold text-white uppercase tracking-widest shadow-xl whitespace-nowrap">
+                  <div className="bg-gradient-to-r from-white/[0.08] to-white/[0.02] backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full text-[10px] font-bold text-white uppercase tracking-widest shadow-[0_4px_15px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.2)] whitespace-nowrap">
                     Chat with Me!
                   </div>
                 </motion.div>
@@ -1314,7 +1388,7 @@ export default function MainContent() {
             <motion.div
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => setIsChatOpen(!isChatOpen)}
+              onClick={handleChatToggle}
               className="relative w-12 h-12 cursor-pointer drop-shadow-xl saturate-150"
             >
               <Image
@@ -1347,7 +1421,7 @@ export default function MainContent() {
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          onClick={() => setIsChatOpen(!isChatOpen)}
+          onClick={handleChatToggle}
           className="relative w-16 h-16 cursor-pointer block"
         >
           <Image
@@ -1446,11 +1520,10 @@ export default function MainContent() {
               damping: 26,
               mass: 0.85
             }}
-            className={`fixed z-50 flex flex-col overflow-hidden border border-white/20 bg-gradient-to-br from-white/[0.08] via-white/[0.02] to-white/[0.12] backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.3),inset_0_-1px_1px_rgba(0,0,0,0.2)] rounded-[24px] ${
-              isChatMaximized 
-                ? "bottom-6 right-6 w-[92vw] sm:w-[600px] md:w-[750px] lg:w-[900px] h-[82vh]" 
-                : "bottom-24 right-6 lg:right-24 xl:right-32 w-[380px] sm:w-[440px] h-[560px]"
-            }`}
+            className={`fixed z-50 flex flex-col overflow-hidden border border-white/20 bg-gradient-to-br from-white/[0.08] via-white/[0.02] to-white/[0.12] backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.3),inset_0_-1px_1px_rgba(0,0,0,0.2)] rounded-[24px] ${isChatMaximized
+              ? "bottom-6 right-6 w-[92vw] sm:w-[600px] md:w-[750px] lg:w-[900px] h-[82vh]"
+              : "bottom-24 right-6 lg:right-24 xl:right-32 w-[380px] sm:w-[440px] h-[560px]"
+              }`}
           >
             {/* Shifting Liquid Blobs inside/behind the Glass for Refraction */}
             <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden rounded-[24px]">
@@ -1479,15 +1552,15 @@ export default function MainContent() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <button 
+                <button
                   onClick={() => setIsChatMaximized(!isChatMaximized)}
                   className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 hover:scale-105 transition-all cursor-pointer"
                   title={isChatMaximized ? "Minimize" : "Maximize"}
                 >
                   {isChatMaximized ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
                 </button>
-                <button 
-                  onClick={() => setIsChatOpen(false)}
+                <button
+                  onClick={handleChatClose}
                   className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 hover:scale-105 transition-all cursor-pointer"
                 >
                   <X size={14} />
@@ -1515,11 +1588,10 @@ export default function MainContent() {
                       </div>
                     )}
                     <div
-                      className={`p-3 text-xs leading-relaxed rounded-xl backdrop-blur-sm ${
-                        isUser
-                          ? "bg-primary/20 border border-primary/30 rounded-tr-sm text-white font-medium shadow-[0_2px_12px_rgba(0,222,81,0.1)]"
-                          : "bg-white/[0.08] border border-white/10 rounded-tl-sm text-slate-200 shadow-sm"
-                      }`}
+                      className={`p-3 text-xs leading-relaxed rounded-xl backdrop-blur-sm ${isUser
+                        ? "bg-primary/20 border border-primary/30 rounded-tr-sm text-white font-medium shadow-[0_2px_12px_rgba(0,222,81,0.1)]"
+                        : "bg-white/[0.08] border border-white/10 rounded-tl-sm text-slate-200 shadow-sm"
+                        }`}
                     >
                       <p className="whitespace-pre-line">{msg.content}</p>
                     </div>
@@ -1557,7 +1629,7 @@ export default function MainContent() {
                 disabled={isChatLoading}
                 className="flex-1 bg-black/25 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50 focus:bg-black/35 transition-all disabled:cursor-not-allowed shadow-inner"
               />
-              <button 
+              <button
                 type="submit"
                 disabled={isChatLoading || !chatInput.trim()}
                 className="w-10 h-10 rounded-xl bg-primary hover:bg-primary/95 hover:scale-[1.02] text-black flex items-center justify-center transition-all disabled:bg-white/5 disabled:border-white/10 disabled:text-white/20 disabled:cursor-not-allowed cursor-pointer shadow-[0_0_15px_rgba(0,222,81,0.15)]"
