@@ -20,61 +20,26 @@ export default function MainContent() {
   const [isChatLoading, setIsChatLoading] = useState(false);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
 
-  // Pre-load and cache voices as soon as browser has them ready
-  // getVoices() returns empty on first call — onvoiceschanged fires when they're loaded
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-
-    const loadVoices = () => {
-      voicesRef.current = window.speechSynthesis.getVoices();
-    };
-
-    loadVoices(); // Try immediately (sometimes they're already loaded)
-    window.speechSynthesis.onvoiceschanged = loadVoices; // Always fires on first load
-
-    return () => {
-      window.speechSynthesis.onvoiceschanged = null;
-    };
-  }, []);
-
-  // Web Speech API — soothing voice helper
-  const speak = (text: string) => {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.88;  // slower = more relaxed
-    utterance.pitch = 1.0;  // neutral, natural tone
-    utterance.volume = 0.9;
-
-    // Use cached voices — always consistent, even on first open
-    const voices = voicesRef.current;
-    const preferred =
-      voices.find((v) => v.name.includes("Samantha") && v.lang.startsWith("en")) ||
-      voices.find((v) => v.name.includes("Karen") && v.lang.startsWith("en")) ||
-      voices.find((v) => v.name.includes("Moira") && v.lang.startsWith("en")) ||
-      voices.find((v) => v.name.includes("Zira") && v.lang.startsWith("en")) ||
-      voices.find((v) => v.lang === "en-GB") ||
-      voices.find((v) => v.lang.startsWith("en"));
-
-    if (preferred) utterance.voice = preferred;
-    window.speechSynthesis.speak(utterance);
+  // HTML5 Audio helper for custom open/close sound effects
+  const playAudio = (src: string) => {
+    if (!isVoiceEnabled) return;
+    const audio = new Audio(src);
+    audio.play().catch((err) => console.error("Audio playback failed:", err));
   };
 
-  // Chat open/close with voice
+  // Chat open/close with audio files
   const handleChatToggle = () => {
-    if (!isChatOpen && isVoiceEnabled) {
-      speak("Hello there!, I am Minula's AI Assistant! How can I help you?");
-    } else if (isChatOpen && isVoiceEnabled) {
-      speak("Thanks, See you later!");
+    if (!isChatOpen) {
+      playAudio("/audio/chat-open.mp3");
+    } else {
+      playAudio("/audio/chat-close.mp3");
     }
     setIsChatOpen(!isChatOpen);
   };
 
   const handleChatClose = () => {
-    if (isVoiceEnabled) speak("Thanks, See you later!");
+    playAudio("/audio/chat-close.mp3");
     setIsChatOpen(false);
   };
 
