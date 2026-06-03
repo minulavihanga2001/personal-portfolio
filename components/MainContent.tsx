@@ -20,6 +20,14 @@ export default function MainContent() {
   const [isChatLoading, setIsChatLoading] = useState(false);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus input after chat loader completes or chat is opened
+  useEffect(() => {
+    if (!isChatLoading && isChatOpen) {
+      chatInputRef.current?.focus();
+    }
+  }, [isChatLoading, isChatOpen]);
 
   // HTML5 Audio helper for custom open/close sound effects
   const playAudio = (src: string) => {
@@ -1637,6 +1645,7 @@ export default function MainContent() {
             {/* Input Box */}
             <form onSubmit={handleSendMessage} className="p-3 bg-[var(--chat-header-bg)] border-t border-[var(--border)] flex gap-2 backdrop-blur-md">
               <input
+                ref={chatInputRef}
                 type="text"
                 placeholder="Ask Minula's AI Assistant..."
                 value={chatInput}
