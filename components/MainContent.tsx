@@ -1,11 +1,13 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, ArrowUp, Star, Home, User, Briefcase, Sun, GraduationCap, LayoutGrid, ArrowLeft, Maximize2, Minimize2, X, Award, MapPin, Volume2, VolumeX } from "lucide-react";
+import { Send, ArrowUp, Star, Home, User, Briefcase, Sun, Moon, GraduationCap, LayoutGrid, ArrowLeft, Maximize2, Minimize2, X, Award, MapPin, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function MainContent() {
+  const { isDark, toggleTheme } = useTheme();
   const [time, setTime] = useState("");
   const [isAvatarHovered, setIsAvatarHovered] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -51,9 +53,9 @@ export default function MainContent() {
     const voices = voicesRef.current;
     const preferred =
       voices.find((v) => v.name.includes("Samantha") && v.lang.startsWith("en")) ||
-      voices.find((v) => v.name.includes("Karen")    && v.lang.startsWith("en")) ||
-      voices.find((v) => v.name.includes("Moira")    && v.lang.startsWith("en")) ||
-      voices.find((v) => v.name.includes("Zira")     && v.lang.startsWith("en")) ||
+      voices.find((v) => v.name.includes("Karen") && v.lang.startsWith("en")) ||
+      voices.find((v) => v.name.includes("Moira") && v.lang.startsWith("en")) ||
+      voices.find((v) => v.name.includes("Zira") && v.lang.startsWith("en")) ||
       voices.find((v) => v.lang === "en-GB") ||
       voices.find((v) => v.lang.startsWith("en"));
 
@@ -365,7 +367,7 @@ export default function MainContent() {
         className="fixed top-12 right-6 lg:right-8 xl:right-12 2xl:right-16 text-right z-50 pointer-events-none hidden lg:block"
       >
         <p className="text-muted-foreground text-sm font-medium">{new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}</p>
-        <p className="text-white/80 font-mono text-xl">{time}</p>
+        <p className="text-[var(--foreground)] opacity-80 font-mono text-xl">{time}</p>
       </motion.div>
 
       {/* Top Header (Identity) */}
@@ -379,7 +381,7 @@ export default function MainContent() {
             <div
               onMouseEnter={() => setIsAvatarHovered(true)}
               onMouseLeave={() => setIsAvatarHovered(false)}
-              className="w-15 h-15 rounded-full bg-white/5 border border-[#2b2c30] flex items-center justify-center overflow-hidden cursor-pointer group"
+              className="w-15 h-15 rounded-full bg-[var(--surface-hover)] border border-[var(--border)] flex items-center justify-center overflow-hidden cursor-pointer group"
             >
               <Image
                 src="/mini-image2.jpeg"
@@ -396,7 +398,7 @@ export default function MainContent() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.8, y: 10 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="absolute top-18 left-0 z-50 p-1.5 bg-[#1c1d24]/95 backdrop-blur-xl border border-primary/10 rounded-2xl shadow-2xl pointer-events-none"
+                  className="absolute top-18 left-0 z-50 p-1.5 bg-[var(--card)] backdrop-blur-xl border border-primary/10 rounded-2xl shadow-2xl pointer-events-none"
                 >
                   <div className="w-48 h-48 rounded-xl overflow-hidden relative">
                     <Image
@@ -411,7 +413,7 @@ export default function MainContent() {
             </AnimatePresence>
           </div>
           <div>
-            <h1 className="text-white font-semibold text-lg mb-1 mt-[-4px]">Minula Vihanga</h1>
+            <h1 className="text-[var(--foreground)] font-semibold text-lg mb-1 mt-[-4px]">Minula Vihanga</h1>
             <p className="text-muted-foreground text-xs uppercase tracking-widest">Web Developer and AI Enthusiast</p>
           </div>
         </motion.div>
@@ -425,7 +427,7 @@ export default function MainContent() {
           transition={{ delay: 0.2, duration: 0.8 }}
           className="relative z-10"
         >
-          <h2 className="text-4xl lg:text-5xl xl:text-5xl 2xl:text-6xl font-bold text-white max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl leading-[1.2] tracking-tight">
+          <h2 className="text-4xl lg:text-5xl xl:text-5xl 2xl:text-6xl font-bold text-[var(--foreground)] max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl leading-[1.2] tracking-tight">
             I build software solutions that <br />
             solve <span className="text-primary"> real-world </span>
             problems.
@@ -436,7 +438,7 @@ export default function MainContent() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="mt-6 lg:mt-8 bg-[#1c1d24] border border-[#2b2c30] rounded-xl p-4 lg:p-5 w-full max-w-xl shadow-2xl overflow-hidden relative group"
+            className="mt-6 lg:mt-8 bg-[var(--code-bg)] border border-[var(--border)] rounded-xl p-4 lg:p-5 w-full max-w-xl shadow-2xl overflow-hidden relative group"
           >
             {/* Mac-style window controls */}
             <div className="flex gap-2 mb-3 relative z-10">
@@ -445,31 +447,31 @@ export default function MainContent() {
               <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></div>
             </div>
 
-            <pre className="text-[10px] lg:text-[12px] font-[family-name:var(--font-jetbrains-mono)] whitespace-pre-wrap leading-relaxed text-[#abb2bf] relative z-10">
+            <pre className="text-[10px] lg:text-[12px] font-mono whitespace-pre-wrap leading-relaxed text-[var(--code-text)] relative z-10">
               <code>
-                <span className="text-[#c678dd]">class</span> <span className="text-[#e5c07b]">Minula</span> <span className="text-[#c678dd]">extends</span> <span className="text-[#e5c07b]">Developer</span> {'{\n'}
-                {'  '}<span className="text-[#61afef]">constructor</span>() {'{\n'}
-                {'    '}<span className="text-[#c678dd]">super</span>();{'\n'}
-                {'    '}<span className="text-[#c678dd]">this</span>.<span className="text-[#e06c75]">stack</span> <span className="text-[#56b6c2]">=</span> [<span className="text-[#98c379]">"Full Stack"</span>, <span className="text-[#98c379]">"Web"</span>, <span className="text-[#98c379]">"Mobile"</span>];{'\n'}
-                {'    '}<span className="text-[#c678dd]">this</span>.<span className="text-[#e06c75]">interests</span> <span className="text-[#56b6c2]">=</span> [<span className="text-[#98c379]">"AI"</span>, <span className="text-[#98c379]">"Tech"</span>, <span className="text-[#98c379]">"Problem Solving"</span>];{'\n'}
+                <span className="text-[var(--code-keyword)]">class</span> <span className="text-[var(--code-entity)]">Minula</span> <span className="text-[var(--code-keyword)]">extends</span> <span className="text-[var(--code-entity)]">Developer</span> {'{\n'}
+                {'  '}<span className="text-[var(--code-function)]">constructor</span>() {'{\n'}
+                {'    '}<span className="text-[var(--code-keyword)]">super</span>();{'\n'}
+                {'    '}<span className="text-[var(--code-keyword)]">this</span>.<span className="text-[var(--code-variable)]">stack</span> <span className="text-[var(--code-operator)]">=</span> [<span className="text-[var(--code-string)]">"Full Stack"</span>, <span className="text-[var(--code-string)]">"Web"</span>, <span className="text-[var(--code-string)]">"Mobile"</span>];{'\n'}
+                {'    '}<span className="text-[var(--code-keyword)]">this</span>.<span className="text-[var(--code-variable)]">interests</span> <span className="text-[var(--code-operator)]">=</span> [<span className="text-[var(--code-string)]">"AI"</span>, <span className="text-[var(--code-string)]">"Tech"</span>, <span className="text-[var(--code-string)]">"Problem Solving"</span>];{'\n'}
                 {'  }'}{'\n\n'}
-                {'  '}<span className="text-[#61afef]">build</span>() {'{\n'}
-                {'    '}<span className="text-[#c678dd]">return</span> <span className="text-[#98c379]">"Crafting ideas into reality..."</span>;{'\n'}
+                {'  '}<span className="text-[var(--code-function)]">build</span>() {'{\n'}
+                {'    '}<span className="text-[var(--code-keyword)]">return</span> <span className="text-[var(--code-string)]">"Crafting ideas into reality..."</span>;{'\n'}
                 {'  }'}{'\n'}
                 {'}'}{'\n\n'}
-                <span className="text-[#c678dd]">const</span> <span className="text-[#e06c75]">me</span> <span className="text-[#56b6c2]">=</span> <span className="text-[#c678dd]">new</span> <span className="text-[#e5c07b]">Minula</span>();{'\n'}
-                <span className="text-[#e06c75]">me</span>.<span className="text-[#61afef]">build</span>();
+                <span className="text-[var(--code-keyword)]">const</span> <span className="text-[var(--code-variable)]">me</span> <span className="text-[var(--code-operator)]">=</span> <span className="text-[var(--code-keyword)]">new</span> <span className="text-[var(--code-entity)]">Minula</span>();{'\n'}
+                <span className="text-[var(--code-variable)]">me</span>.<span className="text-[var(--code-function)]">build</span>();
               </code>
             </pre>
 
             {/* Subtle glow effect behind code block */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#00de51]/5 blur-[80px] rounded-full pointer-events-none transition-all group-hover:bg-[#00de51]/10"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[var(--primary)]/5 blur-[80px] rounded-full pointer-events-none transition-all group-hover:bg-[var(--primary)]/10"></div>
           </motion.div>
         </motion.div>
       </section>
 
       {/* About Section */}
-      <section id="about" className="pt-24 pb-32 border-t border-[#2b2c30]/50 relative">
+      <section id="about" className="pt-24 pb-32 border-t border-[var(--border)] relative">
         {/* Glow effect behind the section */}
         <div className="absolute top-40 left-0 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
 
@@ -477,10 +479,10 @@ export default function MainContent() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#1c1d24]/50 border border-[#2b2c30] backdrop-blur-xl shadow-xl w-fit mb-10 relative z-10"
+          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[var(--card)] border border-[var(--border)] backdrop-blur-xl shadow-xl w-fit mb-10 relative z-10"
         >
           <User size={16} className="text-primary" />
-          <span className="text-white text-xs font-bold tracking-[0.3em] uppercase mt-[2px]">ABOUT</span>
+          <span className="text-[var(--foreground)] text-xs font-bold tracking-[0.3em] uppercase mt-[2px]">ABOUT</span>
         </motion.div>
 
         <motion.div
@@ -490,11 +492,11 @@ export default function MainContent() {
           transition={{ delay: 0.2 }}
           className="max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl relative z-10"
         >
-          <h3 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-8 leading-tight">
+          <h3 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-[var(--foreground)] mb-8 leading-tight">
             <span className="block">Every great application starts with a</span>
             <span className="block">simple idea and solid architecture</span>
           </h3>
-          <p className="text-[#abb2bf] text-lg leading-relaxed text-justify">
+          <p className="text-[var(--muted-foreground)] text-lg leading-relaxed text-justify">
             Hi, I'm Minula Vihanga, a software developer and AI enthusiast with a passion for building clean,
             user-friendly applications. My background in the sciences gives me a unique and analytical approach to
             problem-solving, a skill I now apply to crafting digital experiences with React, Next.js, and React Native. As a
@@ -505,15 +507,15 @@ export default function MainContent() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="pt-24 pb-32 border-t border-[#2b2c30]/50 relative">
+      <section id="projects" className="pt-24 pb-32 border-t border-[var(--border)] relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#1c1d24]/50 border border-[#2b2c30] backdrop-blur-xl shadow-xl w-fit mb-16 relative z-10"
+          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[var(--card)] border border-[var(--border)] backdrop-blur-xl shadow-xl w-fit mb-16 relative z-10"
         >
           <Briefcase size={16} className="text-primary" />
-          <span className="text-white text-xs font-bold tracking-[0.3em] uppercase mt-[2px]">PROJECTS</span>
+          <span className="text-[var(--foreground)] text-xs font-bold tracking-[0.3em] uppercase mt-[2px]">PROJECTS</span>
         </motion.div>
 
         <div className="space-y-0 relative z-10 max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl">
@@ -524,7 +526,7 @@ export default function MainContent() {
             return (
               <div
                 key={project.id}
-                className={`border-t border-[#2b2c30]/50 group cursor-pointer ${idx === projectsData.length - 1 ? 'border-b' : ''}`}
+                className={`border-t border-[var(--border)] group cursor-pointer ${idx === projectsData.length - 1 ? 'border-b' : ''}`}
                 onMouseEnter={() => setHoveredAccordionId(project.id)}
                 onMouseLeave={() => setHoveredAccordionId(null)}
                 onClick={() => {
@@ -534,19 +536,19 @@ export default function MainContent() {
               >
                 {/* Accordion Header */}
                 <div className="py-4 lg:py-6 flex items-center justify-between transition-colors">
-                  <h3 className={`text-xl sm:text-2xl lg:text-3xl font-semibold transition-all duration-500 font-sans tracking-tight ${isExpanded || isHovered ? 'text-white translate-x-4' : 'text-white/40'}`}>
+                  <h3 className={`text-xl sm:text-2xl lg:text-3xl font-semibold transition-all duration-500 font-sans tracking-tight ${isExpanded || isHovered ? 'text-[var(--foreground)] translate-x-4' : 'text-[var(--foreground)] opacity-70 dark:opacity-40'}`}>
                     {project.title}
                   </h3>
 
-                  <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-full border border-[#2b2c30] flex items-center justify-center transition-all duration-500 ${isExpanded ? 'scale-110 border-primary shadow-[0_0_15px_rgba(0,222,81,0.2)]' : 'bg-transparent'}`}>
+                  <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-full border border-[var(--border)] flex items-center justify-center transition-all duration-500 ${isExpanded ? 'scale-110 border-primary shadow-[0_0_15px_rgba(0,222,81,0.2)]' : 'bg-transparent'}`}>
                     {isExpanded ? (
                       <motion.div initial={{ rotate: 0 }} animate={{ rotate: 180 }} transition={{ duration: 0.3 }}>
                         <div className="w-3.5 h-[2px] bg-primary"></div>
                       </motion.div>
                     ) : (
                       <div className="relative w-3.5 h-3.5 flex items-center justify-center">
-                        <div className="w-3.5 h-[2px] bg-white group-hover:bg-primary transition-colors"></div>
-                        <div className="absolute w-[2px] h-3.5 bg-white group-hover:bg-primary transition-colors"></div>
+                        <div className="w-3.5 h-[2px] bg-[var(--foreground)] group-hover:bg-primary transition-colors"></div>
+                        <div className="absolute w-[2px] h-3.5 bg-[var(--foreground)] group-hover:bg-primary transition-colors"></div>
                       </div>
                     )}
                   </div>
@@ -574,7 +576,7 @@ export default function MainContent() {
                               transition={{ duration: 0.3 }}
                               className="w-full px-4"
                             >
-                              <p className="text-[#abb2bf] text-base lg:text-lg leading-relaxed mb-6 max-w-3xl text-justify">
+                              <p className="text-[var(--muted-foreground)] text-base lg:text-lg leading-relaxed mb-6 max-w-3xl text-justify">
                                 {project.description}
                               </p>
 
@@ -587,10 +589,10 @@ export default function MainContent() {
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       whileHover={{ y: -4 }}
-                                      className="group flex flex-col md:flex-row bg-[#1c1d24]/30 border border-[#2b2c30]/30 rounded-xl overflow-hidden hover:border-primary/40 hover:bg-[#1c1d24]/70 shadow-md hover:shadow-[0_0_25px_rgba(0,222,81,0.05)] transition-all duration-300"
+                                      className="group flex flex-col md:flex-row bg-[var(--card)] border border-[var(--border)] rounded-xl overflow-hidden hover:border-primary/40 shadow-md hover:shadow-[0_0_25px_rgba(0,222,81,0.05)] transition-all duration-300"
                                     >
                                       {/* Image container */}
-                                      <div className="w-full md:w-72 aspect-[16/10.5] relative bg-[#2b2c30]/20 shrink-0 overflow-hidden">
+                                      <div className="w-full md:w-72 aspect-[16/10.5] relative bg-[var(--muted)] shrink-0 overflow-hidden">
                                         <Image
                                           src={article.thumbnail || "/project-placeholder.png"}
                                           alt={article.name}
@@ -605,12 +607,12 @@ export default function MainContent() {
                                         <div className="space-y-2.5">
                                           <div className="flex items-center gap-3">
                                             <span className="text-[9px] font-bold uppercase tracking-widest text-[#0a66c2] bg-[#0a66c2]/10 px-2 py-0.5 rounded-sm">LinkedIn Article</span>
-                                            <span className="text-[9px] text-[#abb2bf]/60">{(article as any).date || "December 31, 2025"}</span>
+                                            <span className="text-[9px] text-[var(--muted-foreground)] opacity-60">{(article as any).date || "December 31, 2025"}</span>
                                           </div>
-                                          <h4 className="text-white font-bold text-sm md:text-base group-hover:text-primary transition-colors leading-snug line-clamp-2">
+                                          <h4 className="text-[var(--foreground)] font-bold text-sm md:text-base group-hover:text-primary transition-colors leading-snug line-clamp-2">
                                             {article.name}
                                           </h4>
-                                          <p className="text-[#abb2bf] text-[10px] md:text-xs leading-relaxed text-justify line-clamp-2">
+                                          <p className="text-[var(--muted-foreground)] text-[10px] md:text-xs leading-relaxed text-justify line-clamp-2">
                                             {article.desc}
                                           </p>
                                         </div>
@@ -618,7 +620,7 @@ export default function MainContent() {
                                         <div className="flex items-center justify-between mt-4">
                                           <div className="flex flex-wrap gap-1.5">
                                             {article.tech?.map(t => (
-                                              <span key={t} className="text-[8px] md:text-[9px] font-medium text-white/50 bg-white/5 border border-white/5 px-2 py-0.5 rounded-sm">{t}</span>
+                                              <span key={t} className="text-[8px] md:text-[9px] font-medium text-[var(--muted-foreground)] bg-[var(--tag-bg)] border border-[var(--tag-border)] px-2 py-0.5 rounded-sm">{t}</span>
                                             ))}
                                           </div>
                                           <span className="text-[10px] font-bold text-primary group-hover:translate-x-1 transition-transform flex items-center gap-1 shrink-0 uppercase tracking-wider">
@@ -636,10 +638,10 @@ export default function MainContent() {
                                       key={pIdx}
                                       whileHover={{ y: -4 }}
                                       onClick={() => setActiveProjectName(p.name)}
-                                      className="group/card bg-[#1c1d24]/30 border border-[#2b2c30]/30 rounded-lg overflow-hidden cursor-pointer hover:border-primary/40 hover:bg-[#1c1d24]/70 shadow-md hover:shadow-[0_0_25px_rgba(0,222,81,0.05)] transition-all duration-300 flex flex-col"
+                                      className="group/card bg-[var(--card)] border border-[var(--border)] rounded-lg overflow-hidden cursor-pointer hover:border-primary/40 shadow-md hover:shadow-[0_0_25px_rgba(0,222,81,0.05)] transition-all duration-300 flex flex-col"
                                     >
                                       {/* Thumbnail Image */}
-                                      <div className="h-32 md:h-44 bg-[#2b2c30]/20 relative flex items-center justify-center border-b border-[#2b2c30]/20 overflow-hidden">
+                                      <div className="h-32 md:h-44 bg-[var(--muted)] relative flex items-center justify-center border-b border-[var(--border)] overflow-hidden">
                                         <Image
                                           src={p.thumbnail || "/project-placeholder.png"}
                                           alt={p.name}
@@ -647,23 +649,23 @@ export default function MainContent() {
                                           unoptimized={true}
                                           className="object-cover opacity-60 group-hover/card:opacity-100 group-hover/card:scale-105 transition-all duration-500 ease-out"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-[#1c1d24] to-transparent opacity-40"></div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-[var(--card)] to-transparent opacity-40"></div>
                                       </div>
 
                                       <div className="p-4 md:p-5 flex flex-col flex-1">
                                         <div className="flex items-center justify-between mb-2.5">
                                           <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded-sm">{p.role}</span>
                                         </div>
-                                        <h4 className="text-white font-bold text-sm md:text-base mb-1.5 group-hover/card:text-primary transition-colors line-clamp-1 leading-snug">{p.name}</h4>
-                                        <p className="text-[#abb2bf] text-[10px] md:text-xs leading-relaxed line-clamp-3 h-auto mb-4 flex-1 overflow-hidden text-justify">
+                                        <h4 className="text-[var(--foreground)] font-bold text-sm md:text-base mb-1.5 group-hover/card:text-primary transition-colors line-clamp-1 leading-snug">{p.name}</h4>
+                                        <p className="text-[var(--muted-foreground)] text-[10px] md:text-xs leading-relaxed line-clamp-3 h-auto mb-4 flex-1 overflow-hidden text-justify">
                                           {p.desc}
                                         </p>
 
                                         <div className="flex flex-wrap gap-1.5 mt-auto">
                                           {p.tech?.slice(0, 4).map(t => (
-                                            <span key={t} className="text-[8px] md:text-[9px] font-medium text-white/50 bg-white/5 border border-white/5 px-2 py-0.5 rounded-sm">{t}</span>
+                                            <span key={t} className="text-[8px] md:text-[9px] font-medium text-[var(--muted-foreground)] bg-[var(--tag-bg)] border border-[var(--tag-border)] px-2 py-0.5 rounded-sm">{t}</span>
                                           ))}
-                                          {p.tech && p.tech.length > 4 && <span className="text-[8px] md:text-[9px] font-medium text-white/30 px-1">+{p.tech.length - 4}</span>}
+                                          {p.tech && p.tech.length > 4 && <span className="text-[8px] md:text-[9px] font-medium text-[var(--muted-foreground)] opacity-60 px-1">+{p.tech.length - 4}</span>}
                                         </div>
                                       </div>
                                     </motion.div>
@@ -684,7 +686,7 @@ export default function MainContent() {
                               {/* Go Back Button */}
                               <button
                                 onClick={() => setActiveProjectName(null)}
-                                className="flex items-center gap-2 text-[#abb2bf] hover:text-white transition-colors text-sm font-bold tracking-widest uppercase mb-10 group"
+                                className="flex items-center gap-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors text-sm font-bold tracking-widest uppercase mb-10 group"
                               >
                                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
                                 Back to {project.title}
@@ -695,23 +697,23 @@ export default function MainContent() {
                                   {/* Project Header & Meta */}
                                   <div className="space-y-6">
                                     <div className="flex flex-wrap items-center gap-4">
-                                      <h4 className="text-3xl lg:text-4xl font-bold text-white tracking-tight">{p.name}</h4>
+                                      <h4 className="text-3xl lg:text-4xl font-bold text-[var(--foreground)] tracking-tight">{p.name}</h4>
                                       <span className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold uppercase tracking-wider shadow-[0_0_15px_rgba(0,222,81,0.1)] whitespace-nowrap mt-1 lg:mt-2">
                                         {p.role}
                                       </span>
                                     </div>
 
-                                    <p className="text-[#abb2bf] text-lg leading-relaxed max-w-3xl text-justify">
+                                    <p className="text-[var(--muted-foreground)] text-lg leading-relaxed max-w-3xl text-justify">
                                       {p.desc}
                                     </p>
 
                                     {/* Tech & Tools Pills */}
                                     <div className="flex flex-wrap gap-2 pt-2">
                                       {p.tech?.map((t) => (
-                                        <span key={t} className="px-3 py-1 rounded-md bg-[#1c1d24] border border-[#2b2c30] text-[#abb2bf] text-[10px] font-medium transition-colors hover:border-primary/30">{t}</span>
+                                        <span key={t} className="px-3 py-1 rounded-md bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)] text-[10px] font-medium transition-colors hover:border-primary/30">{t}</span>
                                       ))}
                                       {p.tools?.map((t) => (
-                                        <span key={t} className="px-3 py-1 rounded-md bg-[#1c1d24]/30 border border-[#2b2c30]/50 text-[#abb2bf]/60 text-[10px] font-medium">{t}</span>
+                                        <span key={t} className="px-3 py-1 rounded-md bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)] opacity-60 text-[10px] font-medium">{t}</span>
                                       ))}
                                     </div>
                                   </div>
@@ -721,14 +723,14 @@ export default function MainContent() {
                                     <a
                                       href={p.github}
                                       target="_blank"
-                                      className="flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:border-white/30 transition-all text-xs font-bold uppercase tracking-widest group whitespace-nowrap shadow-xl backdrop-blur-md"
+                                      className="flex items-center gap-3 px-6 py-3 rounded-full bg-[var(--surface-hover)] border border-[var(--border)] text-[var(--foreground)] opacity-80 hover:opacity-100 hover:border-primary/30 transition-all text-xs font-bold uppercase tracking-widest group whitespace-nowrap shadow-xl backdrop-blur-md"
                                     >
                                       <Image
                                         src="/github.svg"
                                         alt="GitHub"
                                         width={20}
                                         height={20}
-                                        className="brightness-0 invert opacity-80 group-hover:opacity-100 transition-opacity"
+                                        className={`opacity-80 group-hover:opacity-100 transition-opacity ${isDark ? 'brightness-0 invert' : 'brightness-0'}`}
                                       />
                                       <span className="mt-[2px]">GitHub Repository</span>
                                     </a>
@@ -742,7 +744,7 @@ export default function MainContent() {
                                         const isWebProject = p.name.toLowerCase().includes("showroom") || p.name.toLowerCase().includes("studymate") || p.name.toLowerCase().includes("steamnoodles") || p.name.toLowerCase().includes("tracking");
                                         let aspectClass = isWebProject ? "aspect-[16/10]" : "aspect-[9/19.5]";
                                         let objectFitClass = isWebProject ? "object-cover" : "object-contain";
-                                        let containerClass = "relative bg-[#1c1d24] rounded-md border border-[#2b2c30]/50 group/display shadow-lg hover:border-primary/30 cursor-pointer overflow-hidden";
+                                        let containerClass = "relative bg-[var(--card)] rounded-md border border-[var(--border)] group/display shadow-lg hover:border-primary/30 cursor-pointer overflow-hidden";
                                         let wrapperClass = isWebProject ? "flex-1 min-w-[250px]" : "flex-1 max-w-[200px]";
 
                                         if (!isWebProject) {
@@ -854,10 +856,10 @@ export default function MainContent() {
                                             stiffness: 300,
                                             damping: 20
                                           }}
-                                          className="relative aspect-[16/10] bg-[#1c1d24] rounded-md border border-[#2b2c30]/50 group/display shadow-2xl hover:border-primary/30 cursor-pointer"
+                                          className="relative aspect-[16/10] bg-[var(--card)] rounded-md border border-[var(--border)] group/display shadow-2xl hover:border-primary/30 cursor-pointer"
                                         >
                                           <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50 z-10 pointer-events-none rounded-md"></div>
-                                          <div className="w-full h-full relative flex items-center justify-center bg-[#2b2c30]/10 rounded-md overflow-hidden">
+                                          <div className="w-full h-full relative flex items-center justify-center bg-[var(--muted)]/20 rounded-md overflow-hidden">
                                             <div className="absolute inset-0">
                                               <Image
                                                 src={display.src}
@@ -895,7 +897,7 @@ export default function MainContent() {
       </section>
 
       {/* Certificates Section */}
-      <section id="certificates" className="pt-24 pb-32 border-t border-[#2b2c30]/50 relative">
+      <section id="certificates" className="pt-24 pb-32 border-t border-[var(--border)] relative">
         {/* Glow effect behind the section */}
         <div className="absolute top-40 left-0 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
 
@@ -903,10 +905,10 @@ export default function MainContent() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#1c1d24]/50 border border-[#2b2c30] backdrop-blur-xl shadow-xl w-fit mb-12 relative z-10"
+          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[var(--card)] border border-[var(--border)] backdrop-blur-xl shadow-xl w-fit mb-12 relative z-10"
         >
           <Award size={16} className="text-primary" />
-          <span className="text-white text-xs font-bold tracking-[0.3em] uppercase mt-[2px]">CERTIFICATES</span>
+          <span className="text-[var(--foreground)] text-xs font-bold tracking-[0.3em] uppercase mt-[2px]">CERTIFICATES</span>
         </motion.div>
 
         <div className="max-w-xl md:max-w-2xl lg:max-w-2xl xl:max-w-2xl 2xl:max-w-3xl relative z-10">
@@ -943,10 +945,10 @@ export default function MainContent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: cIdx * 0.05 }}
-                className="group/cert bg-[#1c1d24]/30 border border-[#2b2c30]/30 rounded-md overflow-hidden hover:border-primary/40 hover:bg-[#1c1d24]/70 shadow-md hover:shadow-[0_0_25px_rgba(0,222,81,0.05)] transition-all duration-300 flex flex-col"
+                className="group/cert border border-[var(--border)] rounded-md overflow-hidden hover:border-primary/40 shadow-md hover:shadow-[0_0_25px_rgba(0,222,81,0.05)] transition-all duration-300 flex flex-col"
               >
                 {/* Image / Lightbox trigger */}
-                <div className="relative aspect-[1.414/1] bg-[#2b2c30]/20 overflow-hidden cursor-pointer">
+                <div className="relative aspect-[1.414/1] bg-[var(--muted)] overflow-hidden cursor-pointer">
                   <Image
                     src={cert.img}
                     alt={cert.title}
@@ -967,8 +969,8 @@ export default function MainContent() {
                 <div className="p-2.5 flex flex-col justify-between flex-1">
                   <div className="space-y-1">
                     <span className="text-[7px] font-bold text-primary uppercase tracking-widest bg-primary/10 px-1.5 py-0.5 rounded-sm w-fit block">{cert.date}</span>
-                    <h4 className="text-white font-bold text-[10px] leading-snug group-hover/cert:text-primary transition-colors line-clamp-2">{cert.title}</h4>
-                    <p className="text-[#abb2bf] text-[9px] leading-relaxed line-clamp-1">{cert.issuer}</p>
+                    <h4 className="text-[var(--foreground)] font-bold text-[10px] leading-snug group-hover/cert:text-primary transition-colors line-clamp-2">{cert.title}</h4>
+                    <p className="text-[var(--muted-foreground)] text-[9px] leading-relaxed line-clamp-1">{cert.issuer}</p>
                   </div>
                 </div>
               </motion.div>
@@ -978,15 +980,15 @@ export default function MainContent() {
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className="pt-24 pb-32 border-t border-[#2b2c30]/50 relative">
+      <section id="skills" className="pt-24 pb-32 border-t border-[var(--border)] relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#1c1d24]/50 border border-[#2b2c30] backdrop-blur-xl shadow-xl w-fit mb-12 relative z-10"
+          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[var(--card)] border border-[var(--border)] backdrop-blur-xl shadow-xl w-fit mb-12 relative z-10"
         >
           <LayoutGrid size={16} className="text-primary" />
-          <span className="text-white text-xs font-bold tracking-[0.3em] uppercase mt-[2px]">TECH STACK</span>
+          <span className="text-[var(--foreground)] text-xs font-bold tracking-[0.3em] uppercase mt-[2px]">TECH STACK</span>
         </motion.div>
 
         <div className="max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl relative z-10 space-y-12">
@@ -1023,7 +1025,7 @@ export default function MainContent() {
               {/* Top Row: Title + Icon Marquee */}
               <div className="flex items-center gap-6 lg:gap-10">
                 <div className="shrink-0 pl-2 border-l-2 border-primary min-w-[120px]">
-                  <h4 className="text-white font-bold tracking-widest uppercase text-xs lg:text-sm">
+                  <h4 className="text-[var(--foreground)] font-bold tracking-widest uppercase text-xs lg:text-sm">
                     {category.name}
                   </h4>
                 </div>
@@ -1078,15 +1080,15 @@ export default function MainContent() {
                       'Supabase': '#3ECF8E',
                       'SSMS': '#0078D4',
                       'Antigravity': '#00B2FF',
-                      'Cursor': '#FFFFFF',
+                      'Cursor': '#8B5CF6',
                       'Arduino IDE': '#00979D',
                       'VS Code': '#007ACC',
                       'Postman': '#FF6C37',
-                      'Vercel': '#000000',
+                      'Vercel': '#71717a',
                       'Git': '#F05032',
-                      'GitHub': '#FFFFFF'
+                      'GitHub': '#71717a'
                     };
-                    return colors[name] || '#2b2c30';
+                    return colors[name] || 'var(--border)';
                   };
 
                   const dotColor = getSkillColor(skill);
@@ -1094,13 +1096,13 @@ export default function MainContent() {
                   return (
                     <div
                       key={skill}
-                      className="group flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1c1d24]/30 border border-[#2b2c30] hover:border-primary/50 transition-all cursor-default"
+                      className="group flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--border)] hover:border-primary/50 transition-all cursor-default"
                     >
                       <div
                         className="w-1.5 h-1.5 rounded-full transition-all duration-300 group-hover:scale-125"
                         style={{ backgroundColor: dotColor, boxShadow: `0 0 8px ${dotColor}44` }}
                       ></div>
-                      <span className="text-[#abb2bf] font-medium text-xs lg:text-sm transition-colors group-hover:text-white">
+                      <span className="text-[var(--muted-foreground)] font-medium text-xs lg:text-sm transition-colors group-hover:text-[var(--foreground)]">
                         {skill}
                       </span>
                     </div>
@@ -1113,20 +1115,20 @@ export default function MainContent() {
       </section>
 
       {/* Education Section */}
-      <section id="education" className="pt-24 pb-32 border-t border-[#2b2c30]/50 relative">
+      <section id="education" className="pt-24 pb-32 border-t border-[var(--border)] relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#1c1d24]/50 border border-[#2b2c30] backdrop-blur-xl shadow-xl w-fit mb-16 relative z-10"
+          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[var(--card)] border border-[var(--border)] backdrop-blur-xl shadow-xl w-fit mb-16 relative z-10"
         >
           <GraduationCap size={16} className="text-primary" />
-          <span className="text-white text-xs font-bold tracking-[0.3em] uppercase mt-[2px]">EDUCATION</span>
+          <span className="text-[var(--foreground)] text-xs font-bold tracking-[0.3em] uppercase mt-[2px]">EDUCATION</span>
         </motion.div>
 
         <div className="max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl relative">
           {/* Vertical Line */}
-          <div className="absolute left-[100px] lg:left-[140px] top-3 bottom-0 w-[1px] bg-[#2b2c30]"></div>
+          <div className="absolute left-[100px] lg:left-[140px] top-3 bottom-0 w-[1px] bg-[var(--border)]"></div>
 
           {/* Timeline Item 1 */}
           <motion.div
@@ -1137,7 +1139,7 @@ export default function MainContent() {
           >
             {/* Date */}
             <div className="w-[100px] lg:w-[140px] flex-shrink-0 pt-0.5 pr-6 text-right">
-              <span className="text-[#abb2bf] font-medium text-sm lg:text-base">2023 - 2026</span>
+              <span className="text-[var(--muted-foreground)] font-medium text-sm lg:text-base">2023 - 2026</span>
             </div>
 
             {/* Node */}
@@ -1147,8 +1149,8 @@ export default function MainContent() {
 
             {/* Content */}
             <div className="flex-1 pl-6 lg:pl-10">
-              <h4 className="text-xl lg:text-2xl font-bold text-white mb-2">BSc (Hons) in Software Engineering</h4>
-              <p className="text-[#abb2bf] text-base leading-relaxed">University of Plymouth, UK (via NSBM Green University)</p>
+              <h4 className="text-xl lg:text-2xl font-bold text-[var(--foreground)] mb-2">BSc (Hons) in Software Engineering</h4>
+              <p className="text-[var(--muted-foreground)] text-base leading-relaxed">University of Plymouth, UK (via NSBM Green University)</p>
             </div>
           </motion.div>
 
@@ -1162,7 +1164,7 @@ export default function MainContent() {
           >
             {/* Date */}
             <div className="w-[100px] lg:w-[140px] flex-shrink-0 pt-0.5 pr-6 text-right">
-              <span className="text-[#abb2bf] font-medium text-sm lg:text-base">2012 - 2022</span>
+              <span className="text-[var(--muted-foreground)] font-medium text-sm lg:text-base">2012 - 2022</span>
             </div>
 
             {/* Node */}
@@ -1172,24 +1174,24 @@ export default function MainContent() {
 
             {/* Content */}
             <div className="flex-1 pl-6 lg:pl-10">
-              <h4 className="text-xl lg:text-2xl font-bold text-white mb-2">Advanced Level - Biological Science Stream</h4>
-              <p className="text-[#abb2bf] text-base mb-1">Sripalee College, Horana</p>
-              <p className="text-white/40 text-sm">G.C.E. Advanced Level</p>
+              <h4 className="text-xl lg:text-2xl font-bold text-[var(--foreground)] mb-2">Advanced Level - Biological Science Stream</h4>
+              <p className="text-[var(--muted-foreground)] text-base mb-1">Sripalee College, Horana</p>
+              <p className="text-[var(--foreground)] opacity-70 dark:opacity-40 text-sm">G.C.E. Advanced Level</p>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="pt-24 pb-32 border-t border-[#2b2c30]/50 relative">
+      <section id="contact" className="pt-24 pb-32 border-t border-[var(--border)] relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#1c1d24]/50 border border-[#2b2c30] backdrop-blur-xl shadow-xl w-fit mb-12 relative z-10"
+          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[var(--card)] border border-[var(--border)] backdrop-blur-xl shadow-xl w-fit mb-12 relative z-10"
         >
           <Send size={16} className="text-primary" />
-          <span className="text-white text-xs font-bold tracking-[0.3em] uppercase mt-[2px]">CONTACT</span>
+          <span className="text-[var(--foreground)] text-xs font-bold tracking-[0.3em] uppercase mt-[2px]">CONTACT</span>
         </motion.div>
 
         <div className="max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl relative z-10 grid grid-cols-1 xl:grid-cols-5 gap-12">
@@ -1200,29 +1202,29 @@ export default function MainContent() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-3xl lg:text-4xl font-bold text-white mb-6">Let's work together!</h3>
-              <p className="text-[#abb2bf] leading-relaxed mb-8">
+              <h3 className="text-3xl lg:text-4xl font-bold text-[var(--foreground)] mb-6">Let's work together!</h3>
+              <p className="text-[var(--muted-foreground)] leading-relaxed mb-8">
                 I'm currently available for freelance work and full-time opportunities. Have a project in mind? Reach out and let's make it a reality.
               </p>
 
               <div className="space-y-4">
-                <a href="mailto:minulavihanga70@gmail.com" className="flex items-center gap-4 p-4 rounded-xl bg-[#1c1d24]/30 border border-[#2b2c30] hover:border-primary/30 transition-all group">
-                  <div className="w-10 h-10 rounded-full bg-[#1c1d24] flex items-center justify-center border border-[#2b2c30] group-hover:border-primary/50 transition-all text-[#abb2bf] group-hover:text-primary">
+                <a href="mailto:minulavihanga70@gmail.com" className="flex items-center gap-4 p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] hover:border-primary/30 transition-all group">
+                  <div className="w-10 h-10 rounded-full bg-[var(--muted)] flex items-center justify-center border border-[var(--border)] group-hover:border-primary/50 transition-all text-[var(--muted-foreground)] group-hover:text-primary">
                     <Send size={18} />
                   </div>
                   <div>
-                    <p className="text-white font-bold">Email</p>
-                    <p className="text-[#abb2bf] text-sm">minulavihanga70@gmail.com</p>
+                    <p className="text-[var(--foreground)] font-bold">Email</p>
+                    <p className="text-[var(--muted-foreground)] text-sm">minulavihanga70@gmail.com</p>
                   </div>
                 </a>
 
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-[#1c1d24]/30 border border-[#2b2c30] cursor-default">
-                  <div className="w-10 h-10 rounded-full bg-[#1c1d24] flex items-center justify-center border border-[#2b2c30] text-[#abb2bf]">
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] cursor-default">
+                  <div className="w-10 h-10 rounded-full bg-[var(--muted)] flex items-center justify-center border border-[var(--border)] text-[var(--muted-foreground)]">
                     <MapPin size={18} />
                   </div>
                   <div>
-                    <p className="text-white font-bold">Location</p>
-                    <p className="text-[#abb2bf] text-sm">Horana, Sri Lanka</p>
+                    <p className="text-[var(--foreground)] font-bold">Location</p>
+                    <p className="text-[var(--muted-foreground)] text-sm">Horana, Sri Lanka</p>
                   </div>
                 </div>
               </div>
@@ -1240,45 +1242,45 @@ export default function MainContent() {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="block text-xs font-bold text-white uppercase tracking-widest ml-1 mb-2">Full Name</label>
+                  <label className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-2">Full Name</label>
                   <input
                     type="text"
                     placeholder="John Doe"
-                    className="w-full bg-[#1c1d24]/50 border border-[#2b2c30] rounded-xl px-5 py-4 text-white placeholder:text-white/10 focus:outline-none focus:border-primary/50 transition-all"
+                    className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-5 py-4 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="block text-xs font-bold text-white uppercase tracking-widest ml-1 mb-2">Email Address</label>
+                  <label className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-2">Email Address</label>
                   <input
                     type="email"
                     placeholder="john@example.com"
-                    className="w-full bg-[#1c1d24]/50 border border-[#2b2c30] rounded-xl px-5 py-4 text-white placeholder:text-white/10 focus:outline-none focus:border-primary/50 transition-all"
+                    className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-5 py-4 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="block text-xs font-bold text-white uppercase tracking-widest ml-1 mb-2">Subject</label>
+                <label className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-2">Subject</label>
                 <input
                   type="text"
                   placeholder="Project Inquiry"
-                  className="w-full bg-[#1c1d24]/50 border border-[#2b2c30] rounded-xl px-5 py-4 text-white placeholder:text-white/10 focus:outline-none focus:border-primary/50 transition-all"
+                  className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-5 py-4 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="block text-xs font-bold text-white uppercase tracking-widest ml-1 mb-2">Message</label>
+                <label className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-2">Message</label>
                 <textarea
                   placeholder="Tell me about your project..."
                   rows={4}
-                  className="w-full bg-[#1c1d24]/50 border border-[#2b2c30] rounded-xl px-5 py-4 text-white placeholder:text-white/10 focus:outline-none focus:border-primary/50 transition-all resize-none"
+                  className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-5 py-4 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all resize-none"
                 />
               </div>
 
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full py-4 bg-primary text-black font-bold rounded-xl hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(0,222,81,0.2)] flex items-center justify-center gap-3 group"
+                className="w-full py-4 bg-primary text-black font-bold rounded-xl hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-3 group"
               >
                 Send Message
                 <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
@@ -1293,31 +1295,79 @@ export default function MainContent() {
 
         {/* Middle Group: Sun + Nav Pill */}
         <div className="flex flex-col items-center gap-4">
-          <motion.button
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-12 h-12 rounded-full bg-gradient-to-br from-white/[0.08] via-white/[0.02] to-white/[0.1] backdrop-blur-2xl border border-white/20 flex items-center justify-center text-primary shadow-[0_8px_25px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.25)] hover:border-primary/40 hover:shadow-[0_0_15px_rgba(0,222,81,0.15)] transition-all cursor-pointer"
+          
+          {/* Theme Change Button */}
+          <div
+            className="relative flex items-center justify-center w-full"
+            onMouseEnter={() => setHoveredItem("theme")}
+            onMouseLeave={() => setHoveredItem(null)}
           >
-            <Sun size={20} fill="currentColor" className="opacity-80" />
-          </motion.button>
+            <AnimatePresence>
+              {hoveredItem === "theme" && (
+                <motion.div
+                  initial={{ opacity: 0, x: 10, scale: 0.8 }}
+                  animate={{ opacity: 1, x: -10, scale: 1 }}
+                  exit={{ opacity: 0, x: 10, scale: 0.8 }}
+                  className="absolute right-full mr-2 pointer-events-none z-50"
+                >
+                  <div className={`backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-bold text-[var(--foreground)] uppercase tracking-widest shadow-[0_4px_15px_rgba(0,0,0,0.15)] whitespace-nowrap border ${isDark ? "bg-[var(--nav-pill-from)] border-[var(--nav-pill-border)]" : "bg-[var(--card)] border-[var(--border)]"}`}>
+                    {isDark ? "Light Mode" : "Dark Mode"}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <motion.button
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={toggleTheme}
+              className={`w-12 h-12 rounded-full flex items-center justify-center transition-all cursor-pointer border ${isDark ? "bg-gradient-to-br from-white/[0.08] via-white/[0.02] to-white/[0.1] backdrop-blur-xl border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),inset_0_-1px_1px_rgba(0,0,0,0.15),0_4px_10px_rgba(0,0,0,0.2)] hover:from-white/[0.15] hover:to-white/[0.05] hover:border-primary/40 text-primary" : "bg-gradient-to-b from-white/50 via-white/20 to-black/5 border-black/15 text-[#1a1b1e] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_1px_rgba(0,0,0,0.03),0_4px_10px_rgba(0,0,0,0.04)] hover:from-white/75 hover:to-white/35 hover:border-black/25"}`}
+            >
+              {isDark ? (
+                <Sun size={20} fill="currentColor" className="opacity-80" />
+              ) : (
+                <Moon size={20} fill="currentColor" className="opacity-80" />
+              )}
+            </motion.button>
+          </div>
 
           {/* Voice Enable/Disable Button */}
-          <motion.button
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setIsVoiceEnabled(!isVoiceEnabled)}
-            className={`w-12 h-12 rounded-full backdrop-blur-2xl border flex items-center justify-center shadow-[0_8px_25px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.25)] transition-all cursor-pointer ${
-              isVoiceEnabled
-                ? "bg-gradient-to-br from-primary/20 to-primary/5 border-primary/40 text-primary shadow-[0_0_15px_rgba(0,222,81,0.15)] hover:bg-primary/25"
-                : "bg-gradient-to-br from-white/[0.08] via-white/[0.02] to-white/[0.1] border-white/20 text-white/30 hover:text-white/70 hover:border-white/30"
-            }`}
-            title={isVoiceEnabled ? "Mute voice" : "Enable voice"}
+          <div
+            className="relative flex items-center justify-center w-full"
+            onMouseEnter={() => setHoveredItem("sound")}
+            onMouseLeave={() => setHoveredItem(null)}
           >
-            {isVoiceEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
-          </motion.button>
+            <AnimatePresence>
+              {hoveredItem === "sound" && (
+                <motion.div
+                  initial={{ opacity: 0, x: 10, scale: 0.8 }}
+                  animate={{ opacity: 1, x: -10, scale: 1 }}
+                  exit={{ opacity: 0, x: 10, scale: 0.8 }}
+                  className="absolute right-full mr-2 pointer-events-none z-50"
+                >
+                  <div className={`backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-bold text-[var(--foreground)] uppercase tracking-widest shadow-[0_4px_15px_rgba(0,0,0,0.15)] whitespace-nowrap border ${isDark ? "bg-[var(--nav-pill-from)] border-[var(--nav-pill-border)]" : "bg-[var(--card)] border-[var(--border)]"}`}>
+                    {isVoiceEnabled ? "Disable Bot Sounds" : "Enable Bot Sounds"}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <motion.button
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsVoiceEnabled(!isVoiceEnabled)}
+              className={`w-12 h-12 rounded-full flex items-center justify-center transition-all cursor-pointer border ${isVoiceEnabled
+                  ? (isDark ? "bg-primary/15 border-primary/40 text-primary hover:bg-primary/25" : "bg-primary/15 border-[#00a83c]/30 text-primary hover:bg-primary/25")
+                  : (isDark ? "bg-gradient-to-br from-white/[0.08] via-white/[0.02] to-white/[0.1] backdrop-blur-xl border-white/20 text-[var(--muted-foreground)] hover:text-[var(--foreground)] shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),inset_0_-1px_1px_rgba(0,0,0,0.15),0_4px_10px_rgba(0,0,0,0.2)] hover:from-white/[0.15] hover:to-white/[0.05] hover:border-white/40" : "bg-gradient-to-b from-white/50 via-white/20 to-black/5 border-black/15 text-[#1a1b1e] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_1px_rgba(0,0,0,0.03),0_4px_10px_rgba(0,0,0,0.04)] hover:from-white/75 hover:to-white/35 hover:border-black/25")
+                }`}
+              title={isVoiceEnabled ? "Mute voice" : "Enable voice"}
+            >
+              {isVoiceEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
+            </motion.button>
+          </div>
 
           {/* Navigation Pill Container */}
-          <div className="bg-gradient-to-b from-white/[0.08] via-white/[0.02] to-white/[0.1] backdrop-blur-2xl border border-white/20 rounded-full py-6 flex flex-col items-center gap-6 shadow-[0_15px_35px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.25),inset_0_-1px_1px_rgba(0,0,0,0.15)] relative w-12">
+          <div className={`backdrop-blur-2xl rounded-full py-6 flex flex-col items-center gap-6 relative w-12 border ${isDark ? "bg-gradient-to-br from-white/[0.08] via-white/[0.02] to-white/[0.1] border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),inset_0_-1px_1px_rgba(0,0,0,0.15),0_15px_35px_rgba(0,0,0,0.15)]" : "bg-gradient-to-b from-white/50 via-white/20 to-black/5 border-black/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_1px_rgba(0,0,0,0.03),0_15px_35px_rgba(0,0,0,0.05)]"}`}>
 
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -1339,7 +1389,7 @@ export default function MainContent() {
                         exit={{ opacity: 0, x: 10, scale: 0.8 }}
                         className="absolute right-full mr-2 pointer-events-none"
                       >
-                        <div className="bg-gradient-to-r from-white/[0.08] to-white/[0.02] backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full text-[10px] font-bold text-white uppercase tracking-widest shadow-[0_4px_15px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.2)] whitespace-nowrap">
+                        <div className={`backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-bold text-[var(--foreground)] uppercase tracking-widest shadow-[0_4px_15px_rgba(0,0,0,0.15)] whitespace-nowrap border ${isDark ? "bg-[var(--nav-pill-from)] border-[var(--nav-pill-border)]" : "bg-[var(--card)] border-[var(--border)]"}`}>
                           {item.label}
                         </div>
                       </motion.div>
@@ -1354,7 +1404,7 @@ export default function MainContent() {
                         element.scrollIntoView({ behavior: "smooth" });
                       }
                     }}
-                    className={`relative flex items-center justify-center transition-colors ${activeSection === item.id ? 'text-primary' : 'text-white/30 hover:text-white'}`}
+                    className={`relative flex items-center justify-center transition-colors ${activeSection === item.id ? 'text-primary' : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'}`}
                   >
                     <Icon size={20} />
                   </motion.button>
@@ -1378,7 +1428,7 @@ export default function MainContent() {
                   exit={{ opacity: 0, x: 10, scale: 0.8 }}
                   className="absolute right-full mr-2 pointer-events-none z-50"
                 >
-                  <div className="bg-gradient-to-r from-white/[0.08] to-white/[0.02] backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full text-[10px] font-bold text-white uppercase tracking-widest shadow-[0_4px_15px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.2)] whitespace-nowrap">
+                  <div className={`backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-bold text-[var(--foreground)] uppercase tracking-widest shadow-[0_4px_15px_rgba(0,0,0,0.15)] whitespace-nowrap border ${isDark ? "bg-[var(--nav-pill-from)] border-[var(--nav-pill-border)]" : "bg-[var(--card)] border-[var(--border)]"}`}>
                     Chat with Me!
                   </div>
                 </motion.div>
@@ -1446,7 +1496,7 @@ export default function MainContent() {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="w-12 h-12 rounded-full bg-[#1c1d24]/80 backdrop-blur-xl border border-[#2b2c30] flex items-center justify-center text-primary shadow-2xl hover:border-primary/50 transition-all cursor-pointer"
+              className="w-12 h-12 rounded-full bg-[var(--card)] backdrop-blur-xl border border-[var(--border)] flex items-center justify-center text-primary shadow-2xl hover:border-primary/50 transition-all cursor-pointer"
             >
               <ArrowUp size={20} />
             </motion.button>
@@ -1520,7 +1570,7 @@ export default function MainContent() {
               damping: 26,
               mass: 0.85
             }}
-            className={`fixed z-50 flex flex-col overflow-hidden border border-white/20 bg-gradient-to-br from-white/[0.08] via-white/[0.02] to-white/[0.12] backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.3),inset_0_-1px_1px_rgba(0,0,0,0.2)] rounded-[24px] ${isChatMaximized
+            className={`fixed z-50 flex flex-col overflow-hidden border border-[var(--border)] bg-[var(--card)] backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.25)] rounded-[24px] ${isChatMaximized
               ? "bottom-6 right-6 w-[92vw] sm:w-[600px] md:w-[750px] lg:w-[900px] h-[82vh]"
               : "bottom-24 right-6 lg:right-24 xl:right-32 w-[380px] sm:w-[440px] h-[560px]"
               }`}
@@ -1533,9 +1583,9 @@ export default function MainContent() {
             </div>
 
             {/* Header */}
-            <div className="p-4 bg-white/[0.05] border-b border-white/10 flex items-center justify-between backdrop-blur-md">
+            <div className="p-4 bg-[var(--chat-header-bg)] border-b border-[var(--border)] flex items-center justify-between backdrop-blur-md">
               <div className="flex items-center gap-3">
-                <div className="relative w-8 h-8 rounded-full bg-white/10 flex items-center justify-center border border-white/20 overflow-hidden">
+                <div className="relative w-8 h-8 rounded-full bg-[var(--surface-hover)] flex items-center justify-center border border-[var(--border)] overflow-hidden">
                   <Image
                     src="/bot1.png"
                     alt="AI Avatar"
@@ -1544,7 +1594,7 @@ export default function MainContent() {
                   />
                 </div>
                 <div>
-                  <h4 className="text-white font-bold text-xs tracking-wider uppercase drop-shadow-sm">Minula's AI Assistant</h4>
+                  <h4 className="text-[var(--foreground)] font-bold text-xs tracking-wider uppercase drop-shadow-sm">Minula's AI Assistant</h4>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_4px_#00de51]"></span>
                     <span className="text-primary/90 text-[9px] font-bold tracking-wide uppercase drop-shadow-sm">Online & Ready</span>
@@ -1554,14 +1604,14 @@ export default function MainContent() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setIsChatMaximized(!isChatMaximized)}
-                  className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 hover:scale-105 transition-all cursor-pointer"
+                  className="p-1.5 rounded-lg bg-[var(--surface-hover)] border border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] hover:scale-105 transition-all cursor-pointer"
                   title={isChatMaximized ? "Minimize" : "Maximize"}
                 >
                   {isChatMaximized ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
                 </button>
                 <button
                   onClick={handleChatClose}
-                  className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 hover:scale-105 transition-all cursor-pointer"
+                  className="p-1.5 rounded-lg bg-[var(--surface-hover)] border border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] hover:scale-105 transition-all cursor-pointer"
                 >
                   <X size={14} />
                 </button>
@@ -1569,7 +1619,7 @@ export default function MainContent() {
             </div>
 
             {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-black/10">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[var(--chat-panel-bg)]">
               {messages.map((msg, mIdx) => {
                 const isUser = msg.role === "user";
                 return (
@@ -1578,7 +1628,7 @@ export default function MainContent() {
                     className={`flex items-start gap-2.5 max-w-[85%] ${isUser ? "ml-auto flex-row-reverse" : ""}`}
                   >
                     {!isUser && (
-                      <div className="w-6 h-6 rounded-full bg-white/10 border border-white/20 relative overflow-hidden flex-shrink-0 mt-0.5">
+                      <div className="w-6 h-6 rounded-full bg-[var(--surface-hover)] border border-[var(--border)] relative overflow-hidden flex-shrink-0 mt-0.5">
                         <Image
                           src="/bot1.png"
                           alt="AI Mini"
@@ -1589,8 +1639,8 @@ export default function MainContent() {
                     )}
                     <div
                       className={`p-3 text-xs leading-relaxed rounded-xl backdrop-blur-sm ${isUser
-                        ? "bg-primary/20 border border-primary/30 rounded-tr-sm text-white font-medium shadow-[0_2px_12px_rgba(0,222,81,0.1)]"
-                        : "bg-white/[0.08] border border-white/10 rounded-tl-sm text-slate-200 shadow-sm"
+                        ? "bg-primary/20 border border-primary/30 rounded-tr-sm text-[var(--foreground)] font-medium shadow-[0_2px_12px_rgba(0,222,81,0.1)]"
+                        : "bg-[var(--chat-model-bubble)] border border-[var(--chat-model-border)] rounded-tl-sm text-[var(--foreground)] shadow-sm"
                         }`}
                     >
                       <p className="whitespace-pre-line">{msg.content}</p>
@@ -1601,7 +1651,7 @@ export default function MainContent() {
 
               {isChatLoading && (
                 <div className="flex items-start gap-2.5 max-w-[85%] animate-pulse">
-                  <div className="w-6 h-6 rounded-full bg-white/10 border border-white/20 relative overflow-hidden flex-shrink-0 mt-0.5">
+                  <div className="w-6 h-6 rounded-full bg-[var(--surface-hover)] border border-[var(--border)] relative overflow-hidden flex-shrink-0 mt-0.5">
                     <Image
                       src="/bot1.png"
                       alt="AI Mini"
@@ -1609,10 +1659,10 @@ export default function MainContent() {
                       className="object-contain p-0.5"
                     />
                   </div>
-                  <div className="p-3 bg-white/[0.08] border border-white/10 rounded-xl rounded-tl-sm flex gap-1 items-center h-8 backdrop-blur-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-white/40 animate-bounce [animation-delay:-0.3s]"></span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-white/40 animate-bounce [animation-delay:-0.15s]"></span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-white/40 animate-bounce"></span>
+                  <div className="p-3 bg-[var(--chat-model-bubble)] border border-[var(--chat-model-border)] rounded-xl rounded-tl-sm flex gap-1 items-center h-8 backdrop-blur-sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--muted-foreground)] animate-bounce [animation-delay:-0.3s]"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--muted-foreground)] animate-bounce [animation-delay:-0.15s]"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--muted-foreground)] animate-bounce"></span>
                   </div>
                 </div>
               )}
@@ -1620,19 +1670,19 @@ export default function MainContent() {
             </div>
 
             {/* Input Box */}
-            <form onSubmit={handleSendMessage} className="p-3 bg-white/[0.03] border-t border-white/10 flex gap-2 backdrop-blur-md">
+            <form onSubmit={handleSendMessage} className="p-3 bg-[var(--chat-header-bg)] border-t border-[var(--border)] flex gap-2 backdrop-blur-md">
               <input
                 type="text"
                 placeholder="Ask Minula's AI Assistant..."
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 disabled={isChatLoading}
-                className="flex-1 bg-black/25 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50 focus:bg-black/35 transition-all disabled:cursor-not-allowed shadow-inner"
+                className="flex-1 bg-[var(--surface-hover)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-xs text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all disabled:cursor-not-allowed shadow-inner"
               />
               <button
                 type="submit"
                 disabled={isChatLoading || !chatInput.trim()}
-                className="w-10 h-10 rounded-xl bg-primary hover:bg-primary/95 hover:scale-[1.02] text-black flex items-center justify-center transition-all disabled:bg-white/5 disabled:border-white/10 disabled:text-white/20 disabled:cursor-not-allowed cursor-pointer shadow-[0_0_15px_rgba(0,222,81,0.15)]"
+                className="w-10 h-10 rounded-xl bg-primary hover:bg-primary/95 hover:scale-[1.02] text-primary-foreground flex items-center justify-center transition-all disabled:bg-[var(--muted)] disabled:border-[var(--border)] disabled:text-[var(--muted-foreground)] disabled:cursor-not-allowed cursor-pointer shadow-md"
               >
                 <Send size={14} />
               </button>

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* ─── Dark Mode (default) ─────────────────────────────────────────── */
 :root {
   --background: #14151a;
   --foreground: #fafafa;
@@ -13,14 +14,89 @@
   --muted-foreground: #a1a1aa;
   --accent: #27272a;
   --accent-foreground: #fafafa;
-  --border: #27272a;
+  --border: #2b2c30;
   --input: #27272a;
   --ring: #00de51;
   --radius-xl: 1.5rem;
   --radius-2xl: 2rem;
+
+  /* Glassmorphism helpers */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --surface-hover: rgba(255, 255, 255, 0.05);
+  --nav-pill-from: rgba(255, 255, 255, 0.08);
+  --nav-pill-to: rgba(255, 255, 255, 0.10);
+  --nav-pill-border: rgba(255, 255, 255, 0.20);
+  --tag-bg: rgba(255, 255, 255, 0.05);
+  --tag-border: rgba(255, 255, 255, 0.05);
+  --placeholder: rgba(255, 255, 255, 0.10);
+  --code-bg: #1c1d24;
+  --code-text: #abb2bf;
+  --code-keyword: #c678dd;
+  --code-entity: #e5c07b;
+  --code-function: #61afef;
+  --code-variable: #e06c75;
+  --code-operator: #56b6c2;
+  --code-string: #98c379;
+  --scrollbar-thumb: #27272a;
+  --scrollbar-thumb-hover: #a1a1aa;
+  --chat-model-bubble: rgba(255, 255, 255, 0.08);
+  --chat-model-border: rgba(255, 255, 255, 0.10);
+  --chat-panel-bg: rgba(0, 0, 0, 0.10);
+  --chat-header-bg: rgba(255, 255, 255, 0.05);
+  --text-gradient-start: #ffffff;
+  --text-gradient-end: #a1a1aa;
+}
+
+/* ─── Light Mode overrides ────────────────────────────────────────── */
+[data-theme="light"] {
+  --background: #f0f0ec;
+  --foreground: #1a1b1e;
+  --card: #e4e4e0;
+  --card-foreground: #1a1b1e;
+  --primary: #00a83c;
+  --primary-foreground: #ffffff;
+  --secondary: #d4d4d0;
+  --secondary-foreground: #1a1b1e;
+  --muted: #d8d8d4;
+  --muted-foreground: #4a4b4f;
+  --accent: #d4d4d0;
+  --accent-foreground: #1a1b1e;
+  --border: #c4c4c0;
+  --input: #d8d8d4;
+  --ring: #00a83c;
+
+  /* Glassmorphism helpers (inverted) */
+  --glass-bg: rgba(0, 0, 0, 0.03);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --surface-hover: rgba(0, 0, 0, 0.05);
+  --nav-pill-from: rgba(255, 255, 255, 0.50);
+  --nav-pill-to: rgba(255, 255, 255, 0.70);
+  --nav-pill-border: rgba(0, 0, 0, 0.10);
+  --tag-bg: rgba(0, 0, 0, 0.05);
+  --tag-border: rgba(0, 0, 0, 0.08);
+  --placeholder: rgba(0, 0, 0, 0.15);
+  --code-bg: #f5f5f2;
+  --code-text: #383a42;
+  --code-keyword: #a626a4;
+  --code-entity: #986801;
+  --code-function: #4078f2;
+  --code-variable: #e45649;
+  --code-operator: #0184bc;
+  --code-string: #50a14f;
+  --scrollbar-thumb: #c4c4c0;
+  --scrollbar-thumb-hover: #4a4b4f;
+  --chat-model-bubble: rgba(0, 0, 0, 0.05);
+  --chat-model-border: rgba(0, 0, 0, 0.10);
+  --chat-panel-bg: rgba(0, 0, 0, 0.04);
+  --chat-header-bg: rgba(0, 0, 0, 0.04);
+  --text-gradient-start: #1a1b1e;
+  --text-gradient-end: #4a4b4f;
 }
 
 @theme inline {
+  --font-sans: var(--font-roboto);
+  --font-mono: var(--font-jetbrains-mono);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -42,13 +118,19 @@
 
 * {
   border-color: var(--border);
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
+  font-family: var(--font-roboto), sans-serif;
   font-feature-settings: "rlig" 1, "calt" 1;
   overflow-x: hidden;
+}
+
+pre, code {
+  font-family: var(--font-mono), monospace;
 }
 
 button,
@@ -68,38 +150,36 @@ a,
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--muted);
+  background: var(--scrollbar-thumb);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--muted-foreground);
+  background: var(--scrollbar-thumb-hover);
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-bg);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
 }
 
 .text-gradient {
-  background: linear-gradient(to bottom right, #fff, #a1a1aa);
+  background: linear-gradient(to bottom right, var(--text-gradient-start), var(--text-gradient-end));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .green-glow {
-  box-shadow: 0 0 20px rgba(0, 255, 127, 0.2);
+  box-shadow: 0 0 20px rgba(0, 222, 81, 0.2);
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0);
   }
-
   50% {
     transform: translateY(-10px);
   }
