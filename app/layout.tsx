@@ -15,8 +15,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Minula Vihanga | Web Developer & AI Enthusiast",
-  description: "Personal portfolio of Minula Vihanga, a Web Developer and AI Enthusiast building modern full-stack web and mobile applications.",
+  title: "Minula Vihanga",
+  description: "Personal portfolio of Minula Vihanga, a Full Stack Developer and AI Enthusiast building modern full-stack web and mobile applications.",
 };
 
 export default function RootLayout({

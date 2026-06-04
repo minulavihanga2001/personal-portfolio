@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, Menu, X, Home, User, Briefcase, LayoutGrid, GraduationCap, Send, Sun, Moon, Award } from "lucide-react";
+import { Download, Menu, X, Home, User, Briefcase, LayoutGrid, GraduationCap, Send, Sun, Moon, Award, Volume2, VolumeX } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTheme } from "@/context/ThemeContext";
 
@@ -27,7 +27,7 @@ const socialLinks = [
 const phrases = ["Minula Vihanga", "a Web Developer", "an AI Enthusiast"];
 
 export default function FixedSidebar() {
-  const { isDark, toggleTheme } = useTheme();
+  const { isDark, toggleTheme, isVoiceEnabled, setIsVoiceEnabled } = useTheme();
 
   const [loopNum, setLoopNum] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -119,7 +119,7 @@ export default function FixedSidebar() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onClick={() => setIsMenuOpen(false)}
-                    className="fixed inset-0 bg-black/60 backdrop-blur-md z-[45]"
+                    className="fixed inset-0 bg-white/20 backdrop-blur-md z-[45]"
                   />
 
                   <motion.div
@@ -127,7 +127,11 @@ export default function FixedSidebar() {
                     initial={{ opacity: 0, scale: 0.95, y: -20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: -20 }}
-                    className="absolute top-14 right-0 w-56 bg-[var(--card)] backdrop-blur-xl border border-[var(--border)] rounded-xl shadow-2xl overflow-hidden py-3 z-50"
+                    className={`absolute top-14 right-0 w-56 backdrop-blur-2xl rounded-xl overflow-hidden py-3 z-50 border transition-all duration-300 ${
+                      isDark 
+                        ? "bg-gradient-to-br from-white/[0.08] via-white/[0.01] to-white/[0.06] border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),inset_0_-1px_1px_rgba(0,0,0,0.15),0_20px_40px_rgba(0,0,0,0.3)]" 
+                        : "bg-gradient-to-b from-white/80 via-white/50 to-black/5 border-black/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_15px_30px_rgba(0,0,0,0.05)]"
+                    }`}
                   >
                     <div className="flex flex-col">
                       {navItems.map((item) => {
@@ -136,31 +140,46 @@ export default function FixedSidebar() {
                           <button
                             key={item.id}
                             onClick={() => scrollToSection(item.id)}
-                            className="flex items-center gap-4 px-5 py-3.5 hover:bg-[var(--surface-hover)] transition-colors text-left"
+                            className="flex items-center gap-4 px-5 py-3 hover:bg-primary/10 hover:text-primary transition-all duration-200 text-left w-full group cursor-pointer"
                           >
-                            <Icon size={18} className="text-primary opacity-70" />
-                            <span className="text-[var(--foreground)] opacity-80 text-sm font-medium tracking-wide">{item.label}</span>
+                            <Icon size={18} className="text-[var(--foreground)] opacity-70 group-hover:text-primary group-hover:opacity-100 transition-all" />
+                            <span className="text-[var(--foreground)] opacity-80 group-hover:text-primary group-hover:opacity-100 text-sm font-medium tracking-wide transition-all">{item.label}</span>
                           </button>
                         );
                       })}
 
-                      {/* Theme Toggle in Menu */}
-                      <div className="border-t border-[var(--border)] mt-2 pt-2 px-2">
+                      {/* Theme & Sound Toggles in Menu */}
+                      <div className="mt-2 pt-3 px-3 flex justify-between items-center gap-3">
+                        {/* Theme Toggle Icon Button */}
                         <button
                           onClick={toggleTheme}
-                          className="w-full flex items-center justify-between px-3 py-3 rounded-xl bg-[var(--surface-hover)] border border-[var(--border)] hover:border-primary/30 transition-all"
+                          style={{ borderColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.05)' }}
+                          className={`flex-1 flex items-center justify-center h-10 rounded-xl transition-all cursor-pointer border ${
+                            isDark 
+                              ? "bg-white/[0.04] hover:bg-white/[0.08] hover:border-primary/40 text-primary" 
+                              : "bg-white/40 hover:bg-white/70 hover:border-[#006b2b]/30 text-[#006b2b]"
+                          }`}
+                          title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
                         >
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-[var(--muted)] flex items-center justify-center text-primary opacity-70">
-                              {isDark ? <Moon size={16} /> : <Sun size={16} />}
-                            </div>
-                            <span className="text-[var(--foreground)] opacity-60 text-xs font-semibold uppercase tracking-widest">
-                              {isDark ? "Dark Mode" : "Light Mode"}
-                            </span>
-                          </div>
-                          <div className={`w-8 h-4 rounded-full p-1 transition-colors ${isDark ? "bg-primary/20" : "bg-primary/30"}`}>
-                            <div className={`w-2 h-2 rounded-full transition-transform ${isDark ? "bg-primary translate-x-4" : "bg-primary translate-x-0"}`}></div>
-                          </div>
+                          {isDark ? <Sun size={16} className="text-primary" /> : <Moon size={16} className="text-[#006b2b]" />}
+                        </button>
+
+                        {/* Sound Toggle Icon Button */}
+                        <button
+                          onClick={() => setIsVoiceEnabled(!isVoiceEnabled)}
+                          style={{ borderColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.05)' }}
+                          className={`flex-1 flex items-center justify-center h-10 rounded-xl transition-all cursor-pointer border ${
+                            isDark 
+                              ? "bg-white/[0.04] hover:bg-white/[0.08] hover:border-primary/40 text-primary" 
+                              : "bg-white/40 hover:bg-white/70 hover:border-[#006b2b]/30 text-[#006b2b]"
+                          }`}
+                          title={isVoiceEnabled ? "Mute Bot Sounds" : "Enable Bot Sounds"}
+                        >
+                          {isVoiceEnabled ? (
+                            <Volume2 size={16} className={isDark ? "text-primary" : "text-[#006b2b]"} />
+                          ) : (
+                            <VolumeX size={16} className="opacity-50" />
+                          )}
                         </button>
                       </div>
                     </div>
@@ -257,9 +276,9 @@ export default function FixedSidebar() {
                 onClick={() => scrollToSection("contact")}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={isDark ? "px-4 py-2 lg:px-5 lg:py-2.5 bg-primary/10 backdrop-blur-md border border-primary text-primary rounded-full text-xs lg:text-sm font-semibold flex items-center gap-2 hover:bg-primary/20 transition-all cursor-pointer" : "px-4 py-2 lg:px-5 lg:py-2.5 border-[0.5px] rounded-full text-xs lg:text-sm font-semibold flex items-center gap-2 transition-all cursor-pointer backdrop-blur-md bg-gradient-to-b from-green-50/80 via-green-100/40 to-green-100/60 border-[#00a83c]/3 text-[#006b2b] shadow-[inset_0_-1px_1px_rgba(0,0,0,0.03),0_4px_12px_rgba(0,107,43,0.06)] hover:from-green-100/70 hover:to-green-200/50 hover:border-[#00a83c]/8 hover:shadow-[0_6px_16px_rgba(0,107,43,0.09)]"}
+                className={isDark ? "px-4 py-2 lg:px-5 lg:py-2.5 bg-primary/10 backdrop-blur-md border border-primary text-primary rounded-full text-xs lg:text-sm font-medium flex items-center gap-2 hover:bg-primary/20 transition-all cursor-pointer tracking-wide" : "px-4 py-2 lg:px-5 lg:py-2.5 border-[0.5px] rounded-full text-xs lg:text-sm font-medium flex items-center gap-2 transition-all cursor-pointer backdrop-blur-md bg-gradient-to-b from-white/65 via-white/35 to-white/15 border-white/30 text-[#00a83c] shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_4px_12px_rgba(255,255,255,0.15)] hover:from-white/80 hover:to-white/40 hover:border-white/50 hover:shadow-[0_6px_16px_rgba(255,255,255,0.25)] tracking-wide"}
               >
-                <Send size={14} className={isDark ? "lg:w-4 lg:h-4 text-primary" : "lg:w-4 lg:h-4 text-[#006b2b]"} />
+                <Send size={14} className={isDark ? "lg:w-4 lg:h-4 text-primary" : "lg:w-4 lg:h-4 text-[#00a83c]"} />
                 {"Contact Me"}
               </motion.button>
 
@@ -268,7 +287,7 @@ export default function FixedSidebar() {
                 download="Minula_CV.pdf"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={isDark ? "px-4 py-2 lg:px-5 lg:py-2.5 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-full text-xs lg:text-sm font-medium flex items-center gap-2 hover:bg-white/10 transition-colors cursor-pointer" : "px-4 py-2 lg:px-5 lg:py-2.5 border-[0.5px] border-black/4 rounded-full text-xs lg:text-sm font-medium flex items-center gap-2 transition-all cursor-pointer backdrop-blur-md bg-gradient-to-b from-white/50 via-white/20 to-black/5 text-black shadow-[inset_0_-1px_1px_rgba(0,0,0,0.03),0_4px_10px_rgba(0,0,0,0.04)] hover:from-white/75 hover:to-white/35 hover:border-black/15"}
+                className={isDark ? "px-4 py-2 lg:px-5 lg:py-2.5 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-full text-xs lg:text-sm font-medium flex items-center gap-2 hover:bg-white/10 transition-colors cursor-pointer" : "px-4 py-2 lg:px-5 lg:py-2.5 border-[0.5px] border-white/20 rounded-full text-xs lg:text-sm font-medium flex items-center gap-2 transition-all cursor-pointer backdrop-blur-md bg-gradient-to-b from-white/60 via-white/30 to-white/10 text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_4px_10px_rgba(255,255,255,0.1)] hover:from-white/85 hover:to-white/45 hover:border-white/40"}
               >
                 <Download size={14} className={isDark ? "lg:w-4 lg:h-4" : "lg:w-4 lg:h-4 text-black"} />
                 Download CV

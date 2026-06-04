@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useTheme } from "@/context/ThemeContext";
 
 export default function MainContent() {
-  const { isDark, toggleTheme } = useTheme();
+  const { isDark, toggleTheme, isVoiceEnabled, setIsVoiceEnabled } = useTheme();
   const [time, setTime] = useState("");
   const [isAvatarHovered, setIsAvatarHovered] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -18,7 +18,6 @@ export default function MainContent() {
   ]);
   const [chatInput, setChatInput] = useState("");
   const [isChatLoading, setIsChatLoading] = useState(false);
-  const [isVoiceEnabled, setIsVoiceEnabled] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatInputRef = useRef<HTMLInputElement>(null);
 
@@ -400,10 +399,18 @@ export default function MainContent() {
           transition={{ delay: 0.2, duration: 0.8 }}
           className="relative z-10"
         >
-          <h2 className="text-4xl lg:text-5xl xl:text-5xl 2xl:text-6xl font-bold text-[var(--foreground)] max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl leading-[1.2] tracking-tight">
-            I build software solutions that <br />
-            solve <span className="text-primary"> real-world </span>
-            problems.
+          <h2 className="text-[28px] sm:text-3xl lg:text-5xl xl:text-5xl 2xl:text-6xl font-bold text-[var(--foreground)] max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl leading-[1.2] tracking-tight">
+            <span className="block sm:hidden text-[30px]">
+              I build software solutions
+              <span className="block text-[26px] font-semibold text-[var(--foreground)]/90 mt-1">
+                that solve <span className="text-primary">real-world</span> problems.
+              </span>
+            </span>
+            <span className="hidden sm:inline">
+              I build software solutions that <br />
+              solve <span className="text-primary"> real-world </span>
+              problems.
+            </span>
           </h2>
 
           {/* Animated Code Snippet Block */}
@@ -465,11 +472,13 @@ export default function MainContent() {
           transition={{ delay: 0.2 }}
           className="max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl relative z-10"
         >
-          <h3 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-[var(--foreground)] mb-8 leading-tight">
-            <span className="block">Every great application starts with a</span>
-            <span className="block">simple idea and solid architecture</span>
+          <h3 className="text-[25px] sm:text-[28px] lg:text-3xl xl:text-4xl font-bold text-[var(--foreground)] mb-8 leading-tight">
+            Every great application starts <br className="sm:hidden" />
+            with <span className="hidden sm:inline"><br /></span>
+            <span className="text-primary">simple</span> ideas & <span className="text-primary">solid</span> <br className="sm:hidden" />
+            architecture
           </h3>
-          <p className="text-[var(--muted-foreground)] text-lg leading-relaxed text-justify">
+          <p className="text-[var(--muted-foreground)] text-sm sm:text-base lg:text-lg leading-relaxed text-justify">
             Hi, I'm Minula Vihanga, a software developer and AI enthusiast with a passion for building clean,
             user-friendly applications. My background in the sciences gives me a unique and analytical approach to
             problem-solving, a skill I now apply to crafting digital experiences with React, Next.js, and React Native. As a
@@ -513,17 +522,21 @@ export default function MainContent() {
                     {project.title}
                   </h3>
 
-                  <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-full border border-[var(--border)] flex items-center justify-center transition-all duration-500 ${isExpanded ? 'scale-110 border-primary shadow-[0_0_15px_rgba(0,222,81,0.2)]' : 'bg-transparent'}`}>
-                    {isExpanded ? (
-                      <motion.div initial={{ rotate: 0 }} animate={{ rotate: 180 }} transition={{ duration: 0.3 }}>
-                        <div className="w-3.5 h-[2px] bg-primary"></div>
-                      </motion.div>
-                    ) : (
-                      <div className="relative w-3.5 h-3.5 flex items-center justify-center">
-                        <div className="w-3.5 h-[2px] bg-[var(--foreground)] group-hover:bg-primary transition-colors"></div>
-                        <div className="absolute w-[2px] h-3.5 bg-[var(--foreground)] group-hover:bg-primary transition-colors"></div>
-                      </div>
-                    )}
+                  <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-full border border-[var(--border)] flex items-center justify-center transition-all duration-500 ${isExpanded ? 'scale-110' : 'bg-transparent'}`}>
+                    <motion.div
+                      animate={{ rotate: isExpanded ? 180 : 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="relative w-3.5 h-3.5 flex items-center justify-center"
+                    >
+                      {/* Horizontal Line */}
+                      <div className="w-3.5 h-[2px] bg-[var(--foreground)] group-hover:bg-primary transition-colors"></div>
+                      {/* Vertical Line */}
+                      <motion.div
+                        animate={{ scaleY: isExpanded ? 0 : 1, opacity: isExpanded ? 0 : 1 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        className="absolute w-[2px] h-3.5 bg-[var(--foreground)] group-hover:bg-primary transition-colors origin-center"
+                      />
+                    </motion.div>
                   </div>
                 </div>
 
@@ -605,7 +618,7 @@ export default function MainContent() {
                                   ))}
                                 </div>
                               ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
+                                <div className="grid grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
                                   {project.projects?.map((p, pIdx) => (
                                     <motion.div
                                       key={pIdx}
@@ -614,7 +627,7 @@ export default function MainContent() {
                                       className="group/card bg-[var(--card)] border border-[var(--border)] rounded-lg overflow-hidden cursor-pointer hover:border-primary/40 shadow-md hover:shadow-[0_0_25px_rgba(0,222,81,0.05)] transition-all duration-300 flex flex-col"
                                     >
                                       {/* Thumbnail Image */}
-                                      <div className="h-32 md:h-44 bg-[var(--muted)] relative flex items-center justify-center border-b border-[var(--border)] overflow-hidden">
+                                      <div className="h-20 sm:h-28 md:h-44 bg-[var(--muted)] relative flex items-center justify-center border-b border-[var(--border)] overflow-hidden">
                                         <Image
                                           src={p.thumbnail || "/project-placeholder.png"}
                                           alt={p.name}
@@ -625,20 +638,20 @@ export default function MainContent() {
                                         <div className="absolute inset-0 bg-gradient-to-t from-[var(--card)] to-transparent opacity-40"></div>
                                       </div>
 
-                                      <div className="p-4 md:p-5 flex flex-col flex-1">
-                                        <div className="flex items-center justify-between mb-2.5">
-                                          <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded-sm">{p.role}</span>
+                                      <div className="p-2.5 sm:p-4 md:p-5 flex flex-col flex-1 min-w-0">
+                                        <div className="flex items-center justify-between mb-1.5 sm:mb-2.5">
+                                          <span className="text-[7px] sm:text-[9px] font-bold uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded-sm">{p.role}</span>
                                         </div>
-                                        <h4 className="text-[var(--foreground)] font-bold text-sm md:text-base mb-1.5 group-hover/card:text-primary transition-colors line-clamp-1 leading-snug">{p.name}</h4>
-                                        <p className="text-[var(--muted-foreground)] text-[10px] md:text-xs leading-relaxed line-clamp-3 h-auto mb-4 flex-1 overflow-hidden text-justify">
+                                        <h4 className="text-[10px] sm:text-sm md:text-base font-bold mb-1 group-hover/card:text-primary transition-colors line-clamp-1 leading-snug">{p.name}</h4>
+                                        <p className="text-[9px] sm:text-[10px] md:text-xs leading-relaxed line-clamp-2 mb-2 sm:mb-4 flex-1 overflow-hidden text-justify text-[var(--muted-foreground)]">
                                           {p.desc}
                                         </p>
 
-                                        <div className="flex flex-wrap gap-1.5 mt-auto">
-                                          {p.tech?.slice(0, 4).map(t => (
-                                            <span key={t} className="text-[8px] md:text-[9px] font-medium text-[var(--muted-foreground)] bg-[var(--tag-bg)] border border-[var(--tag-border)] px-2 py-0.5 rounded-sm">{t}</span>
+                                        <div className="flex flex-wrap gap-1 mt-auto items-center">
+                                          {p.tech?.slice(0, 3).map((t, tIdx) => (
+                                            <span key={t} className={`text-[7px] sm:text-[9px] font-medium text-[var(--muted-foreground)] bg-[var(--tag-bg)] border border-[var(--tag-border)] px-1 py-0.5 rounded-sm ${tIdx >= 2 ? 'hidden sm:inline-block' : ''}`}>{t}</span>
                                           ))}
-                                          {p.tech && p.tech.length > 4 && <span className="text-[8px] md:text-[9px] font-medium text-[var(--muted-foreground)] opacity-60 px-1">+{p.tech.length - 4}</span>}
+                                          {p.tech && p.tech.length > 3 && <span className="text-[7px] sm:text-[9px] font-medium text-[var(--muted-foreground)] opacity-60 px-0.5">+{p.tech.length - 3}</span>}
                                         </div>
                                       </div>
                                     </motion.div>
@@ -659,9 +672,9 @@ export default function MainContent() {
                               {/* Go Back Button */}
                               <button
                                 onClick={() => setActiveProjectName(null)}
-                                className="flex items-center gap-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors text-sm font-bold tracking-widest uppercase mb-10 group"
+                                className="flex items-center gap-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors text-[10px] sm:text-xs md:text-sm font-bold tracking-wider uppercase mb-10 group cursor-pointer"
                               >
-                                <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+                                <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 group-hover:-translate-x-1 transition-transform" />
                                 Back to {project.title}
                               </button>
 
@@ -676,7 +689,7 @@ export default function MainContent() {
                                       </span>
                                     </div>
 
-                                    <p className="text-[var(--muted-foreground)] text-lg leading-relaxed max-w-3xl text-justify">
+                                    <p className="text-[var(--muted-foreground)] text-sm sm:text-base lg:text-lg leading-relaxed max-w-3xl text-justify">
                                       {p.desc}
                                     </p>
 
@@ -1101,29 +1114,30 @@ export default function MainContent() {
 
         <div className="max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl relative">
           {/* Vertical Line */}
-          <div className="absolute left-[100px] lg:left-[140px] top-3 bottom-0 w-[1px] bg-[var(--border)]"></div>
+          <div className="absolute left-3 lg:left-[140px] top-3 bottom-0 w-[1px] bg-[var(--border)]"></div>
 
           {/* Timeline Item 1 */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative flex items-start mb-16"
+            className="relative flex flex-col lg:flex-row items-start mb-10 lg:mb-16 pl-8 lg:pl-0"
           >
             {/* Date */}
-            <div className="w-[100px] lg:w-[140px] flex-shrink-0 pt-0.5 pr-6 text-right">
+            <div className="hidden lg:block w-[140px] flex-shrink-0 pt-0.5 pr-6 text-right">
               <span className="text-[var(--muted-foreground)] font-medium text-sm lg:text-base">2023 - 2026</span>
             </div>
 
             {/* Node */}
-            <div className="relative flex justify-center w-8 -ml-[16px] flex-shrink-0 z-10 mt-2.5 lg:mt-2">
-              <div className="w-3.5 h-3.5 bg-primary rounded-full shadow-[0_0_12px_rgba(0,222,81,0.6)]"></div>
+            <div className="absolute left-1.5 lg:relative lg:left-0 lg:flex lg:justify-center lg:w-8 lg:-ml-[16px] flex-shrink-0 z-10 mt-1.5 lg:mt-2">
+              <div className="w-3 h-3 lg:w-3.5 lg:h-3.5 bg-primary rounded-full shadow-[0_0_12px_rgba(0,222,81,0.6)]"></div>
             </div>
 
             {/* Content */}
-            <div className="flex-1 pl-6 lg:pl-10">
-              <h4 className="text-xl lg:text-2xl font-bold text-[var(--foreground)] mb-2">BSc (Hons) in Software Engineering</h4>
-              <p className="text-[var(--muted-foreground)] text-base leading-relaxed">University of Plymouth, UK (via NSBM Green University)</p>
+            <div className="flex-1 lg:pl-10">
+              <span className="lg:hidden text-primary font-semibold text-[10px] mb-1 block">2023 - 2026</span>
+              <h4 className="text-sm sm:text-base lg:text-2xl font-bold text-[var(--foreground)] mb-1 lg:mb-2">BSc (Hons) in Software Engineering</h4>
+              <p className="text-[var(--muted-foreground)] text-xs lg:text-base leading-relaxed">University of Plymouth, UK (via NSBM Green University)</p>
             </div>
           </motion.div>
 
@@ -1133,130 +1147,131 @@ export default function MainContent() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="relative flex items-start"
+            className="relative flex flex-col lg:flex-row items-start pl-8 lg:pl-0"
           >
             {/* Date */}
-            <div className="w-[100px] lg:w-[140px] flex-shrink-0 pt-0.5 pr-6 text-right">
+            <div className="hidden lg:block w-[140px] flex-shrink-0 pt-0.5 pr-6 text-right">
               <span className="text-[var(--muted-foreground)] font-medium text-sm lg:text-base">2012 - 2022</span>
             </div>
 
             {/* Node */}
-            <div className="relative flex justify-center w-8 -ml-[16px] flex-shrink-0 z-10 mt-2.5 lg:mt-2">
-              <div className="w-3.5 h-3.5 bg-primary rounded-full shadow-[0_0_12px_rgba(0,222,81,0.6)] border-2 border-primary"></div>
+            <div className="absolute left-1.5 lg:relative lg:left-0 lg:flex lg:justify-center lg:w-8 lg:-ml-[16px] flex-shrink-0 z-10 mt-1.5 lg:mt-2">
+              <div className="w-3 h-3 lg:w-3.5 lg:h-3.5 bg-primary rounded-full shadow-[0_0_12px_rgba(0,222,81,0.6)] border-2 border-primary"></div>
             </div>
 
             {/* Content */}
-            <div className="flex-1 pl-6 lg:pl-10">
-              <h4 className="text-xl lg:text-2xl font-bold text-[var(--foreground)] mb-2">Advanced Level - Biological Science Stream</h4>
-              <p className="text-[var(--muted-foreground)] text-base mb-1">Sripalee College, Horana</p>
-              <p className="text-[var(--foreground)] opacity-70 dark:opacity-40 text-sm">G.C.E. Advanced Level</p>
+            <div className="flex-1 lg:pl-10">
+              <span className="lg:hidden text-primary font-semibold text-[10px] mb-1 block">2012 - 2022</span>
+              <h4 className="text-sm sm:text-base lg:text-2xl font-bold text-[var(--foreground)] mb-1 lg:mb-2">Advanced Level - Biological Science Stream</h4>
+              <p className="text-[var(--muted-foreground)] text-xs lg:text-base mb-0.5">Sripalee College, Horana</p>
+              <p className="text-[var(--foreground)] opacity-70 dark:opacity-40 text-[10px] lg:text-sm">G.C.E. Advanced Level</p>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="pt-24 pb-32 border-t border-[var(--border)] relative">
+      <section id="contact" className="pt-16 pb-20 md:pt-24 md:pb-32 border-t border-[var(--border)] relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[var(--card)] border border-[var(--border)] backdrop-blur-xl shadow-xl w-fit mb-12 relative z-10"
+          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[var(--card)] border border-[var(--border)] backdrop-blur-xl shadow-xl w-fit mb-6 md:mb-12 relative z-10"
         >
           <Send size={16} className="text-primary" />
           <span className="text-[var(--foreground)] text-xs font-bold tracking-[0.3em] uppercase mt-[2px]">CONTACT</span>
         </motion.div>
-
-        <div className="max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl relative z-10 grid grid-cols-1 xl:grid-cols-5 gap-12">
+ 
+        <div className="max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl relative z-10 grid grid-cols-1 xl:grid-cols-5 gap-6 md:gap-12">
           {/* Contact Info */}
-          <div className="xl:col-span-2 space-y-8">
+          <div className="xl:col-span-2 space-y-6 md:space-y-8">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-3xl lg:text-4xl font-bold text-[var(--foreground)] mb-6">Let's work together!</h3>
-              <p className="text-[var(--muted-foreground)] leading-relaxed mb-8">
+              <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[var(--foreground)] mb-3 md:mb-6">Let's work together!</h3>
+              <p className="text-[var(--muted-foreground)] text-xs md:text-sm lg:text-base leading-relaxed mb-4 md:mb-8">
                 I'm currently available for freelance work and full-time opportunities. Have a project in mind? Reach out and let's make it a reality.
               </p>
-
-              <div className="space-y-4">
-                <a href="mailto:minulavihanga70@gmail.com" className="flex items-center gap-4 p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] hover:border-primary/30 transition-all group">
-                  <div className="w-10 h-10 rounded-full bg-[var(--muted)] flex items-center justify-center border border-[var(--border)] group-hover:border-primary/50 transition-all text-[var(--muted-foreground)] group-hover:text-primary">
-                    <Send size={18} />
+ 
+              <div className="space-y-3 md:space-y-4">
+                <a href="mailto:minulavihanga70@gmail.com" className="flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-lg bg-[var(--card)] border border-[var(--border)] hover:border-primary/30 transition-all group">
+                  <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[var(--muted)] flex items-center justify-center border border-[var(--border)] group-hover:border-primary/50 transition-all text-[var(--muted-foreground)] group-hover:text-primary">
+                    <Send size={16} />
                   </div>
                   <div>
-                    <p className="text-[var(--foreground)] font-bold">Email</p>
-                    <p className="text-[var(--muted-foreground)] text-sm">minulavihanga70@gmail.com</p>
+                    <p className="text-[var(--foreground)] text-sm md:text-base font-bold">Email</p>
+                    <p className="text-[var(--muted-foreground)] text-xs md:text-sm">minulavihanga70@gmail.com</p>
                   </div>
                 </a>
-
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] cursor-default">
-                  <div className="w-10 h-10 rounded-full bg-[var(--muted)] flex items-center justify-center border border-[var(--border)] text-[var(--muted-foreground)]">
-                    <MapPin size={18} />
+ 
+                <div className="flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-lg bg-[var(--card)] border border-[var(--border)] cursor-default">
+                  <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[var(--muted)] flex items-center justify-center border border-[var(--border)] text-[var(--muted-foreground)]">
+                    <MapPin size={16} />
                   </div>
                   <div>
-                    <p className="text-[var(--foreground)] font-bold">Location</p>
-                    <p className="text-[var(--muted-foreground)] text-sm">Horana, Sri Lanka</p>
+                    <p className="text-[var(--foreground)] text-sm md:text-base font-bold">Location</p>
+                    <p className="text-[var(--muted-foreground)] text-xs md:text-sm">Horana, Sri Lanka</p>
                   </div>
                 </div>
               </div>
             </motion.div>
           </div>
-
+ 
           {/* Contact Form */}
           <div className="xl:col-span-3">
             <motion.form
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="space-y-6"
+              className="space-y-4 md:space-y-6"
               onSubmit={(e) => e.preventDefault()}
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-2">Full Name</label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <div className="space-y-1.5">
+                  <label className="block text-[10px] font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-1 md:mb-2">Full Name</label>
                   <input
                     type="text"
                     placeholder="John Doe"
-                    className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-5 py-4 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all"
+                    className="w-full bg-[var(--card)] border border-[var(--border)] rounded-lg px-4 py-3 md:px-5 md:py-4 text-xs md:text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-2">Email Address</label>
+                <div className="space-y-1.5">
+                  <label className="block text-[10px] font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-1 md:mb-2">Email Address</label>
                   <input
                     type="email"
                     placeholder="john@example.com"
-                    className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-5 py-4 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all"
+                    className="w-full bg-[var(--card)] border border-[var(--border)] rounded-lg px-4 py-3 md:px-5 md:py-4 text-xs md:text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all"
                   />
                 </div>
               </div>
-
-              <div className="space-y-2">
-                <label className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-2">Subject</label>
+ 
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-1 md:mb-2">Subject</label>
                 <input
                   type="text"
                   placeholder="Project Inquiry"
-                  className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-5 py-4 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all"
+                  className="w-full bg-[var(--card)] border border-[var(--border)] rounded-lg px-4 py-3 md:px-5 md:py-4 text-xs md:text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all"
                 />
               </div>
-
-              <div className="space-y-2">
-                <label className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-2">Message</label>
+ 
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-1 md:mb-2">Message</label>
                 <textarea
                   placeholder="Tell me about your project..."
-                  rows={4}
-                  className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-5 py-4 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all resize-none"
+                  rows={3}
+                  className="w-full bg-[var(--card)] border border-[var(--border)] rounded-lg px-4 py-3 md:px-5 md:py-4 text-xs md:text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all resize-none"
                 />
               </div>
-
+ 
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full py-4 bg-primary text-black font-bold rounded-xl hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-3 group"
+                className="w-full py-3 md:py-4 bg-primary text-black font-bold rounded-lg hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-3 group"
               >
                 Send Message
-                <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </motion.button>
             </motion.form>
           </div>
@@ -1268,7 +1283,7 @@ export default function MainContent() {
 
         {/* Middle Group: Sun + Nav Pill */}
         <div className="flex flex-col items-center gap-4">
-          
+
           {/* Theme Change Button */}
           <div
             className="relative flex items-center justify-center w-full"
@@ -1330,8 +1345,8 @@ export default function MainContent() {
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsVoiceEnabled(!isVoiceEnabled)}
               className={`w-12 h-12 rounded-full flex items-center justify-center transition-all cursor-pointer border ${isVoiceEnabled
-                  ? (isDark ? "bg-primary/15 border-primary/40 text-primary hover:bg-primary/25" : "bg-primary/15 border-[#00a83c]/30 text-primary hover:bg-primary/25")
-                  : (isDark ? "bg-gradient-to-br from-white/[0.08] via-white/[0.02] to-white/[0.1] backdrop-blur-xl border-white/20 text-[var(--muted-foreground)] hover:text-[var(--foreground)] shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),inset_0_-1px_1px_rgba(0,0,0,0.15),0_4px_10px_rgba(0,0,0,0.2)] hover:from-white/[0.15] hover:to-white/[0.05] hover:border-white/40" : "bg-gradient-to-b from-white/50 via-white/20 to-black/5 border-black/15 text-[#1a1b1e] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_1px_rgba(0,0,0,0.03),0_4px_10px_rgba(0,0,0,0.04)] hover:from-white/75 hover:to-white/35 hover:border-black/25")
+                ? (isDark ? "bg-primary/15 border-primary/40 text-primary hover:bg-primary/25" : "bg-primary/15 border-[#00a83c]/30 text-primary hover:bg-primary/25")
+                : (isDark ? "bg-gradient-to-br from-white/[0.08] via-white/[0.02] to-white/[0.1] backdrop-blur-xl border-white/20 text-[var(--muted-foreground)] hover:text-[var(--foreground)] shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),inset_0_-1px_1px_rgba(0,0,0,0.15),0_4px_10px_rgba(0,0,0,0.2)] hover:from-white/[0.15] hover:to-white/[0.05] hover:border-white/40" : "bg-gradient-to-b from-white/50 via-white/20 to-black/5 border-black/15 text-[#1a1b1e] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_1px_rgba(0,0,0,0.03),0_4px_10px_rgba(0,0,0,0.04)] hover:from-white/75 hover:to-white/35 hover:border-black/25")
                 }`}
               title={isVoiceEnabled ? "Mute voice" : "Enable voice"}
             >
@@ -1434,13 +1449,7 @@ export default function MainContent() {
         </div>
       </footer>
       {/* Mobile Bot Icon */}
-      <motion.div
-        animate={{
-          y: showScrollTop ? -34 : 0
-        }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="fixed bottom-6 right-6 z-50 pointer-events-auto lg:hidden"
-      >
+      <div className="fixed bottom-6 right-6 z-50 pointer-events-auto lg:hidden">
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -1454,28 +1463,7 @@ export default function MainContent() {
             className="object-contain"
           />
         </motion.button>
-      </motion.div>
-
-      {/* Floating Scroll to Top Button */}
-      <AnimatePresence>
-        {showScrollTop && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            className="fixed bottom-6 right-6 lg:right-8 xl:right-12 2xl:right-16 z-50 px-2"
-          >
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="w-12 h-12 rounded-full bg-[var(--card)] backdrop-blur-xl border border-[var(--border)] flex items-center justify-center text-primary shadow-2xl hover:border-primary/50 transition-all cursor-pointer"
-            >
-              <ArrowUp size={20} />
-            </motion.button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </div>
 
       {/* Lightbox / Enlarged Image Modal */}
       <AnimatePresence>
