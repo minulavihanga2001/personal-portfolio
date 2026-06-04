@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, ArrowUp, Star, Home, User, Briefcase, Sun, Moon, GraduationCap, LayoutGrid, ArrowLeft, Maximize2, Minimize2, X, Award, MapPin, Volume2, VolumeX } from "lucide-react";
+import { Send, ArrowUp, Star, Home, User, Briefcase, Sun, Moon, GraduationCap, LayoutGrid, ArrowLeft, Maximize2, Minimize2, X, Award, MapPin, Volume2, VolumeX, CheckCircle2, AlertCircle } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useTheme } from "@/context/ThemeContext";
@@ -20,6 +20,14 @@ export default function MainContent() {
   const [isChatLoading, setIsChatLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatInputRef = useRef<HTMLInputElement>(null);
+
+  // Contact Form State
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactSubject, setContactSubject] = useState("");
+  const [contactMessage, setContactMessage] = useState("");
+  const [isContactSubmitting, setIsContactSubmitting] = useState(false);
+  const [contactFeedback, setContactFeedback] = useState<{ status: "success" | "error" | null; msg: string }>({ status: null, msg: "" });
 
   // Auto-focus input after chat loader completes or chat is opened
   useEffect(() => {
@@ -95,6 +103,60 @@ export default function MainContent() {
       ]);
     } finally {
       setIsChatLoading(false);
+    }
+  };
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!contactName.trim() || !contactEmail.trim() || !contactMessage.trim() || isContactSubmitting) return;
+
+    setIsContactSubmitting(true);
+    setContactFeedback({ status: null, msg: "" });
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY,
+          name: contactName,
+          email: contactEmail,
+          subject: contactSubject || "Portfolio Contact Message",
+          message: contactMessage
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setContactFeedback({
+          status: "success",
+          msg: "Thank you! Your message has been sent successfully. I will get back to you soon."
+        });
+        setContactName("");
+        setContactEmail("");
+        setContactSubject("");
+        setContactMessage("");
+        setTimeout(() => {
+          setContactFeedback({ status: null, msg: "" });
+        }, 5000);
+      } else {
+        throw new Error(data.message || "Failed to send message.");
+      }
+    } catch (error: any) {
+      console.error(error);
+      setContactFeedback({
+        status: "error",
+        msg: "Oops! Something went wrong while sending your message. Please try again."
+      });
+      setTimeout(() => {
+        setContactFeedback({ status: null, msg: "" });
+      }, 5000);
+    } finally {
+      setIsContactSubmitting(false);
     }
   };
 
@@ -386,7 +448,7 @@ export default function MainContent() {
           </div>
           <div>
             <h1 className="text-[var(--foreground)] font-semibold text-lg mb-1 mt-[-4px]">Minula Vihanga</h1>
-            <p className="text-muted-foreground text-xs uppercase tracking-widest">Web Developer and AI Enthusiast</p>
+            <p className="text-muted-foreground text-xs uppercase tracking-widest">Full-Stack Developer and AI Enthusiast</p>
           </div>
         </motion.div>
       </div>
@@ -981,23 +1043,35 @@ export default function MainContent() {
           {[
             {
               name: "Frontend",
-              skills: ['React', 'Next.js', 'React Native', 'Nativewind', 'Tailwind CSS', 'TypeScript', 'HTML', 'CSS'],
-              icons: ['/icons/front-1.png', '/icons/front-2.png', '/icons/front-3.png', '/icons/front-4.png', '/icons/front-5.png', '/icons/front-6.png']
+              skills: ['React', 'Next.js', 'React Native', 'Nativewind', 'Tailwind CSS', 'JavaScript', 'TypeScript', 'HTML', 'CSS'],
+              icons: ['/icons/front-1.png', '/icons/front-2.png', '/icons/front-3.png', '/icons/front-4.png', '/icons/front-5.png', '/icons/front-6.png', '/icons/front-7.png']
             },
             {
               name: "Backend",
-              skills: ['Java', 'Spring Boot', 'Node.js', 'Express.js', 'Python', 'REST APIs'],
-              icons: ['/icons/back-1.png', '/icons/back-2.png', '/icons/back-3.png', '/icons/back-4.png', '/icons/back-5.png', '/icons/back-6.png']
+              skills: ['Java', 'Spring Boot', 'Node.js', 'Express.js', 'Python', 'FastAPI'],
+              icons: ['/icons/back-1.png', '/icons/back-2.png', '/icons/back-3.png', '/icons/back-5.png', '/icons/back-7.png']
             },
             {
               name: "Databases",
               skills: ['MongoDB', 'MySQL', 'Firebase', 'Supabase', 'SSMS'],
-              icons: ['/icons/db-1.png', '/icons/db-2.png', '/icons/db-3.png', '/icons/db-4.png', '/icons/db-5.png', '/icons/db-6.png']
+              icons: ['/icons/db-1.png', '/icons/db-2.png', '/icons/db-3.png', '/icons/db-4.png', '/icons/db-6.png']
             },
             {
               name: "Development Tools",
-              skills: ['Git', 'GitHub', 'VS Code', 'Antigravity', 'Cursor', 'Arduino IDE', 'Postman', 'Vercel'],
-              icons: ['/icons/tool-1.svg', '/icons/tool-2.svg', '/icons/tool-3.svg', '/icons/tool-4.svg']
+              skills: ['Git', 'GitHub', 'VS Code', 'Google Antigravity', 'Cursor', 'IntelliJ IDEA', 'MATLAB', 'Arduino IDE', 'Postman', 'Vercel', 'Apache NetBeans'],
+              icons: [
+                '/icons/tool-1.png',
+                '/icons/tool-2.png',
+                '/icons/tool-3.png',
+                '/icons/tool-4.png',
+                '/icons/tool-5.png',
+                '/icons/tool-6.png',
+                '/icons/tool-7.png',
+                '/icons/tool-8.png',
+                '/icons/tool-9.png',
+                '/icons/tool-10.png',
+                '/icons/tool-11.png'
+              ]
             }
           ].map((category, index) => (
             <motion.div
@@ -1053,11 +1127,13 @@ export default function MainContent() {
                       'Nativewind': '#38BDF8',
                       'Tailwind CSS': '#06B6D4',
                       'TypeScript': '#3178C6',
+                      'JavaScript': '#F7DF1E',
                       'HTML': '#E34F26',
                       'CSS': '#1572B6',
                       'Node.js': '#339933',
                       'Express.js': '#828282',
                       'Python': '#3776AB',
+                      'FastAPI': '#009688',
                       'Java': '#ED8B00',
                       'Spring Boot': '#6DB33F',
                       'MongoDB': '#47A248',
@@ -1066,13 +1142,17 @@ export default function MainContent() {
                       'Supabase': '#3ECF8E',
                       'SSMS': '#0078D4',
                       'Antigravity': '#00B2FF',
-                      'Cursor': '#8B5CF6',
+                      'Google Antigravity': '#4285F4',
+                      'Cursor': '#00E5FF',
                       'Arduino IDE': '#00979D',
                       'VS Code': '#007ACC',
                       'Postman': '#FF6C37',
-                      'Vercel': '#71717a',
-                      'Git': '#F05032',
-                      'GitHub': '#71717a'
+                      'Vercel': '#FFFFFF',
+                      'Git': '#F1502F',
+                      'GitHub': '#FFFFFF',
+                      'IntelliJ IDEA': '#FE315D',
+                      'MATLAB': '#E16E06',
+                      'Apache NetBeans': '#1B6AC6'
                     };
                     return colors[name] || 'var(--border)';
                   };
@@ -1114,7 +1194,7 @@ export default function MainContent() {
 
         <div className="max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl relative">
           {/* Vertical Line */}
-          <div className="absolute left-3 lg:left-[140px] top-3 bottom-0 w-[1px] bg-[var(--border)]"></div>
+          <div className="absolute left-3 lg:left-[140px] top-3 bottom-0 w-[3px] bg-[var(--border)]"></div>
 
           {/* Timeline Item 1 */}
           <motion.div
@@ -1129,8 +1209,8 @@ export default function MainContent() {
             </div>
 
             {/* Node */}
-            <div className="absolute left-1.5 lg:relative lg:left-0 lg:flex lg:justify-center lg:w-8 lg:-ml-[16px] flex-shrink-0 z-10 mt-1.5 lg:mt-2">
-              <div className="w-3 h-3 lg:w-3.5 lg:h-3.5 bg-primary rounded-full shadow-[0_0_12px_rgba(0,222,81,0.6)]"></div>
+            <div className="absolute left-[7.5px] lg:left-[134.5px] flex items-center justify-center z-10 mt-1.5 lg:mt-2">
+              <div className="w-3 h-3 lg:w-3.5 lg:h-3.5 bg-primary rounded-full"></div>
             </div>
 
             {/* Content */}
@@ -1155,8 +1235,8 @@ export default function MainContent() {
             </div>
 
             {/* Node */}
-            <div className="absolute left-1.5 lg:relative lg:left-0 lg:flex lg:justify-center lg:w-8 lg:-ml-[16px] flex-shrink-0 z-10 mt-1.5 lg:mt-2">
-              <div className="w-3 h-3 lg:w-3.5 lg:h-3.5 bg-primary rounded-full shadow-[0_0_12px_rgba(0,222,81,0.6)] border-2 border-primary"></div>
+            <div className="absolute left-[7.5px] lg:left-[134.5px] flex items-center justify-center z-10 mt-1.5 lg:mt-2">
+              <div className="w-3 h-3 lg:w-3.5 lg:h-3.5 bg-primary rounded-full border-2 border-primary"></div>
             </div>
 
             {/* Content */}
@@ -1181,7 +1261,7 @@ export default function MainContent() {
           <Send size={16} className="text-primary" />
           <span className="text-[var(--foreground)] text-xs font-bold tracking-[0.3em] uppercase mt-[2px]">CONTACT</span>
         </motion.div>
- 
+
         <div className="max-w-2xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl relative z-10 grid grid-cols-1 xl:grid-cols-5 gap-6 md:gap-12">
           {/* Contact Info */}
           <div className="xl:col-span-2 space-y-6 md:space-y-8">
@@ -1194,7 +1274,7 @@ export default function MainContent() {
               <p className="text-[var(--muted-foreground)] text-xs md:text-sm lg:text-base leading-relaxed mb-4 md:mb-8">
                 I'm currently available for freelance work and full-time opportunities. Have a project in mind? Reach out and let's make it a reality.
               </p>
- 
+
               <div className="space-y-3 md:space-y-4">
                 <a href="mailto:minulavihanga70@gmail.com" className="flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-lg bg-[var(--card)] border border-[var(--border)] hover:border-primary/30 transition-all group">
                   <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[var(--muted)] flex items-center justify-center border border-[var(--border)] group-hover:border-primary/50 transition-all text-[var(--muted-foreground)] group-hover:text-primary">
@@ -1205,7 +1285,7 @@ export default function MainContent() {
                     <p className="text-[var(--muted-foreground)] text-xs md:text-sm">minulavihanga70@gmail.com</p>
                   </div>
                 </a>
- 
+
                 <div className="flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-lg bg-[var(--card)] border border-[var(--border)] cursor-default">
                   <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[var(--muted)] flex items-center justify-center border border-[var(--border)] text-[var(--muted-foreground)]">
                     <MapPin size={16} />
@@ -1218,7 +1298,7 @@ export default function MainContent() {
               </div>
             </motion.div>
           </div>
- 
+
           {/* Contact Form */}
           <div className="xl:col-span-3">
             <motion.form
@@ -1226,52 +1306,70 @@ export default function MainContent() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               className="space-y-4 md:space-y-6"
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={handleContactSubmit}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div className="space-y-1.5">
                   <label className="block text-[10px] font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-1 md:mb-2">Full Name</label>
                   <input
                     type="text"
+                    required
+                    disabled={isContactSubmitting}
+                    value={contactName}
+                    onChange={(e) => setContactName(e.target.value)}
                     placeholder="John Doe"
-                    className="w-full bg-[var(--card)] border border-[var(--border)] rounded-lg px-4 py-3 md:px-5 md:py-4 text-xs md:text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all"
+                    className="w-full bg-[var(--card)] border border-[var(--border)] rounded-lg px-4 py-3 md:px-5 md:py-4 text-xs md:text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all disabled:opacity-50"
                   />
                 </div>
                 <div className="space-y-1.5">
                   <label className="block text-[10px] font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-1 md:mb-2">Email Address</label>
                   <input
                     type="email"
+                    required
+                    disabled={isContactSubmitting}
+                    value={contactEmail}
+                    onChange={(e) => setContactEmail(e.target.value)}
                     placeholder="john@example.com"
-                    className="w-full bg-[var(--card)] border border-[var(--border)] rounded-lg px-4 py-3 md:px-5 md:py-4 text-xs md:text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all"
+                    className="w-full bg-[var(--card)] border border-[var(--border)] rounded-lg px-4 py-3 md:px-5 md:py-4 text-xs md:text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all disabled:opacity-50"
                   />
                 </div>
               </div>
- 
+
               <div className="space-y-1.5">
                 <label className="block text-[10px] font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-1 md:mb-2">Subject</label>
                 <input
                   type="text"
+                  disabled={isContactSubmitting}
+                  value={contactSubject}
+                  onChange={(e) => setContactSubject(e.target.value)}
                   placeholder="Project Inquiry"
-                  className="w-full bg-[var(--card)] border border-[var(--border)] rounded-lg px-4 py-3 md:px-5 md:py-4 text-xs md:text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all"
+                  className="w-full bg-[var(--card)] border border-[var(--border)] rounded-lg px-4 py-3 md:px-5 md:py-4 text-xs md:text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all disabled:opacity-50"
                 />
               </div>
- 
+
               <div className="space-y-1.5">
                 <label className="block text-[10px] font-bold text-[var(--foreground)] uppercase tracking-widest ml-1 mb-1 md:mb-2">Message</label>
                 <textarea
+                  required
+                  disabled={isContactSubmitting}
+                  value={contactMessage}
+                  onChange={(e) => setContactMessage(e.target.value)}
                   placeholder="Tell me about your project..."
                   rows={3}
-                  className="w-full bg-[var(--card)] border border-[var(--border)] rounded-lg px-4 py-3 md:px-5 md:py-4 text-xs md:text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all resize-none"
+                  className="w-full bg-[var(--card)] border border-[var(--border)] rounded-lg px-4 py-3 md:px-5 md:py-4 text-xs md:text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] placeholder:opacity-50 focus:outline-none focus:border-primary/50 transition-all resize-none disabled:opacity-50"
                 />
               </div>
- 
+
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full py-3 md:py-4 bg-primary text-black font-bold rounded-lg hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-3 group"
+                whileHover={{ scale: isContactSubmitting ? 1 : 1.02 }}
+                whileTap={{ scale: isContactSubmitting ? 1 : 0.98 }}
+                type="submit"
+                disabled={isContactSubmitting}
+                style={{ color: isDark ? '#09090b' : '#ffffff' }}
+                className="w-full py-3 md:py-4 bg-primary font-bold rounded-lg hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-3 group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
-                Send Message
-                <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                {isContactSubmitting ? "Sending..." : "Send Message"}
+                {!isContactSubmitting && <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
               </motion.button>
             </motion.form>
           </div>
@@ -1441,13 +1539,7 @@ export default function MainContent() {
         </div>
       </div>
 
-      {/* Footer Branding */}
-      <footer className="pt-24 pb-12 opacity-40">
-        <div className="flex items-center gap-4 text-xs tracking-[0.2em] font-medium uppercase">
-          <Star size={12} className="text-primary" />
-          <span>Our clients (2015-25©)</span>
-        </div>
-      </footer>
+
       {/* Mobile Bot Icon */}
       <div className="fixed bottom-6 right-6 z-50 pointer-events-auto lg:hidden">
         <motion.button
@@ -1649,6 +1741,38 @@ export default function MainContent() {
                 <Send size={14} />
               </button>
             </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Toast Notification */}
+      <AnimatePresence>
+        {contactFeedback.status && (
+          <motion.div
+            initial={{ opacity: 0, y: -50, scale: 0.9, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, scale: 1, x: "-50%" }}
+            exit={{ opacity: 0, y: -20, scale: 0.95, x: "-50%" }}
+            transition={{ type: "spring", stiffness: 350, damping: 25 }}
+            className={`fixed top-6 left-1/2 z-[999] flex items-center gap-3 px-5 py-4 rounded-2xl border backdrop-blur-xl shadow-2xl min-w-[320px] max-w-[90vw] md:max-w-md ${
+              contactFeedback.status === "success"
+                ? "bg-[rgba(0,222,81,0.08)] border-primary/20 text-[var(--foreground)]"
+                : "bg-red-500/10 border-red-500/20 text-[var(--foreground)]"
+            }`}
+          >
+            {contactFeedback.status === "success" ? (
+              <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
+            ) : (
+              <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />
+            )}
+            <div className="flex-1 text-xs md:text-sm font-medium leading-relaxed">
+              {contactFeedback.msg}
+            </div>
+            <button
+              onClick={() => setContactFeedback({ status: null, msg: "" })}
+              className="p-1 rounded-lg hover:bg-white/10 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors shrink-0"
+            >
+              <X size={14} />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

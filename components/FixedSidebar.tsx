@@ -24,7 +24,7 @@ const socialLinks = [
   { src: "/facebook.svg", label: "Facebook", href: "https://www.facebook.com/minula.vihanga.79" },
 ];
 
-const phrases = ["Minula Vihanga", "a Web Developer", "an AI Enthusiast"];
+const phrases = ["Minula Vihanga", "a Full-Stack Developer", "an AI Enthusiast"];
 
 export default function FixedSidebar() {
   const { isDark, toggleTheme, isVoiceEnabled, setIsVoiceEnabled } = useTheme();
@@ -127,11 +127,10 @@ export default function FixedSidebar() {
                     initial={{ opacity: 0, scale: 0.95, y: -20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: -20 }}
-                    className={`absolute top-14 right-0 w-56 backdrop-blur-2xl rounded-xl overflow-hidden py-3 z-50 border transition-all duration-300 ${
-                      isDark 
-                        ? "bg-gradient-to-br from-white/[0.08] via-white/[0.01] to-white/[0.06] border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),inset_0_-1px_1px_rgba(0,0,0,0.15),0_20px_40px_rgba(0,0,0,0.3)]" 
-                        : "bg-gradient-to-b from-white/80 via-white/50 to-black/5 border-black/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_15px_30px_rgba(0,0,0,0.05)]"
-                    }`}
+                    className={`absolute top-14 right-0 w-56 backdrop-blur-2xl rounded-xl overflow-hidden py-3 z-50 border transition-all duration-300 ${isDark
+                      ? "bg-gradient-to-br from-white/[0.08] via-white/[0.01] to-white/[0.06] border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),inset_0_-1px_1px_rgba(0,0,0,0.15),0_20px_40px_rgba(0,0,0,0.3)]"
+                      : "bg-gradient-to-b from-white/80 via-white/50 to-black/5 border-black/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_15px_30px_rgba(0,0,0,0.05)]"
+                      }`}
                   >
                     <div className="flex flex-col">
                       {navItems.map((item) => {
@@ -154,11 +153,10 @@ export default function FixedSidebar() {
                         <button
                           onClick={toggleTheme}
                           style={{ borderColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.05)' }}
-                          className={`flex-1 flex items-center justify-center h-10 rounded-xl transition-all cursor-pointer border ${
-                            isDark 
-                              ? "bg-white/[0.04] hover:bg-white/[0.08] hover:border-primary/40 text-primary" 
-                              : "bg-white/40 hover:bg-white/70 hover:border-[#006b2b]/30 text-[#006b2b]"
-                          }`}
+                          className={`flex-1 flex items-center justify-center h-10 rounded-xl transition-all cursor-pointer border ${isDark
+                            ? "bg-white/[0.04] hover:bg-white/[0.08] hover:border-primary/40 text-primary"
+                            : "bg-white/40 hover:bg-white/70 hover:border-[#006b2b]/30 text-[#006b2b]"
+                            }`}
                           title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
                         >
                           {isDark ? <Sun size={16} className="text-primary" /> : <Moon size={16} className="text-[#006b2b]" />}
@@ -168,11 +166,10 @@ export default function FixedSidebar() {
                         <button
                           onClick={() => setIsVoiceEnabled(!isVoiceEnabled)}
                           style={{ borderColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.05)' }}
-                          className={`flex-1 flex items-center justify-center h-10 rounded-xl transition-all cursor-pointer border ${
-                            isDark 
-                              ? "bg-white/[0.04] hover:bg-white/[0.08] hover:border-primary/40 text-primary" 
-                              : "bg-white/40 hover:bg-white/70 hover:border-[#006b2b]/30 text-[#006b2b]"
-                          }`}
+                          className={`flex-1 flex items-center justify-center h-10 rounded-xl transition-all cursor-pointer border ${isDark
+                            ? "bg-white/[0.04] hover:bg-white/[0.08] hover:border-primary/40 text-primary"
+                            : "bg-white/40 hover:bg-white/70 hover:border-[#006b2b]/30 text-[#006b2b]"
+                            }`}
                           title={isVoiceEnabled ? "Mute Bot Sounds" : "Enable Bot Sounds"}
                         >
                           {isVoiceEnabled ? (
